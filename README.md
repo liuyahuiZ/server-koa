@@ -1,11 +1,11 @@
-# koa2-demo
+# server-koa
 
 [![npm version](https://badge.fury.io/js/koa2-demo.svg)](http://badge.fury.io/js/runkoa)
 [![Build](https://travis-ci.org/17koa/koa2-demo.svg?branch=master)](https://travis-ci.org/17koa/koa2-demo)
 
 
 
-这个项目是express风格的最新的Koa 2项目的示例，已集成到[koa-generator](https://github.com/17koa/koa-generator)里，算是集成一些所谓的最佳实践吧
+这个项目是express风格的最新的Koa 2项目的restful示例，集成mongoose操作mongodb
 
 ## Tech Stack
 
@@ -21,15 +21,15 @@
 ## Getting Start
 
 ```
-git clone https://github.com/17koa/koa2-demo.git
-cd koa2-demo
+git clone https://github.com/liuyahuiZ/server-koa.git
+cd server-koa
 npm install
 npm start
 ```
 
 open in browser
 
-http://127.0.0.1:3000/ 
+http://127.0.0.1:2019/ 
 
 ## 启动方式
 
@@ -104,33 +104,21 @@ app.use(views(__dirname + '/views-ejs', {
 
 ```
 ➜  koa2-demo git:(master) tree . -L 2
-.
 ├── LICENSE
 ├── README.md
+├── app
+│   ├── controller
+│   └── modal
 ├── app.js
 ├── bin
 │   ├── run
 │   └── www
+├── config
+│   └── dbConfig.js
 ├── node_modules
-│   ├── co
-│   ├── debug
-│   ├── ejs
-│   ├── jade
-│   ├── koa
-│   ├── koa-bodyparser
-│   ├── koa-convert
-│   ├── koa-json
-│   ├── koa-logger
-│   ├── koa-onerror
-│   ├── koa-router
-│   ├── koa-static
-│   ├── koa-views
-│   ├── nodemon
-│   └── runkoa
+├── package-lock.json
 ├── package.json
 ├── public
-│   ├── images
-│   ├── javascripts
 │   └── stylesheets
 ├── routes
 │   ├── index.js
@@ -139,9 +127,11 @@ app.use(views(__dirname + '/views-ejs', {
 │   ├── error.jade
 │   ├── index.jade
 │   └── layout.jade
-└── views-ejs
-    ├── error.ejs
-    └── index.ejs
+├── views-ejs
+│   ├── error.ejs
+│   └── index.ejs
+├── yarn-error.log
+└── yarn.lock
 
 24 directories, 13 files
 ```

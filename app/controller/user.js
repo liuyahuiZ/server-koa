@@ -1,4 +1,5 @@
 import {user} from '../modal/user'
+const logUtil = require('../../utils/logUtil');
 
 exports.getUserList = async (ctx, next) => {
     try {
@@ -26,9 +27,10 @@ exports.register = async (reqBody) => {
         emial: '690385384@qq.com',
         content: '123123'
     }
+    let start = new Date();
+    let ms;
     try {
         let list = await user.find({username: reqBody.uname});
-        console.log(list)
         let respon = {
             code: '0000',
             message: '',
@@ -45,6 +47,7 @@ exports.register = async (reqBody) => {
         return respon;
     } catch (err) {
         console.log(err)
+        throw new Error(err);
         let respon = {
             code: '9999',
             message: 'error',
@@ -58,14 +61,25 @@ exports.removeUser = async (reqBody) => {
         id: reqBody.id,
     }
     try {
-        let list = await user.delete(dataArr);
+        let list = await user.find({username: reqBody.uname});
         let respon = {
             code: '0000',
-            message: 'success',
-            data: list
+            message: '',
+        }
+        if(list && list.length > 0) {
+            let list = await user.delete(dataArr);
+            let respon = {
+                code: '0000',
+                message: 'success',
+                data: list
+            }
+        }else {
+            respon.message = 'the id is not exicet'
+            respon.data = list
         }
         return respon;
     } catch (err) {
+        throw new Error(err);
         let respon = {
             code: '9999',
             message: 'error',

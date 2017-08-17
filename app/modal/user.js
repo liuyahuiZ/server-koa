@@ -58,7 +58,6 @@ class User{
             user.save(function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
                 if(e){
-                    console.log('e:',e);
                     reject(e);
                 }else{
                     resolve(data);
@@ -73,7 +72,6 @@ class User{
                 _id: dataArr.id
             }, function(e, data) {
                 if(e){
-                    console.log('e:',e);
                     reject(e);
                 }else{
                     resolve(data);

@@ -1,14 +1,14 @@
-var log4js = require('log4js');
+let log4js = require('log4js');
 
-var logConfig = require('../config/logConfig');
+let logConfig = require('../config/logConfig');
 
 //加载配置文件
 log4js.configure(logConfig);
 
-var logUtil = {};
+let logUtil = {};
 
-var errorLogger = log4js.getLogger('error');
-var resLogger = log4js.getLogger('response');
+let errorLogger = log4js.getLogger('error');
+let resLogger = log4js.getLogger('response');
 
 //封装错误日志
 logUtil.logError = function (ctx, error, resTime) {
@@ -25,8 +25,8 @@ logUtil.logResponse = function (ctx, resTime) {
 };
 
 //格式化响应日志
-var formatRes = function (ctx, resTime) {
-    var logText = new String();
+let formatRes = function (ctx, resTime) {
+    let logText = new String();
 
     //响应日志开始
     logText += "\n" + "*************** response log start ***************" + "\n";
@@ -48,8 +48,8 @@ var formatRes = function (ctx, resTime) {
 }
 
 //格式化错误日志
-var formatError = function (ctx, err, resTime) {
-    var logText = new String();
+let formatError = function (ctx, err, resTime) {
+    let logText = new String();
 
     //错误信息开始
     logText += "\n" + "*************** error log start ***************" + "\n";
@@ -71,11 +71,11 @@ var formatError = function (ctx, err, resTime) {
 };
 
 //格式化请求日志
-var formatReqLog = function (req, resTime) {
+let formatReqLog = function (req, resTime) {
 
-    var logText = new String();
+    let logText = new String();
 
-    var method = req.method;
+    let method = req.method;
     //访问方法
     logText += "request method: " + method + "\n";
 
@@ -86,7 +86,7 @@ var formatReqLog = function (req, resTime) {
     logText += "request client ip:  " + req.ip + "\n";
 
     //开始时间
-    var startTime;
+    let startTime;
     //请求参数
     if (method === 'GET') {
         logText += "request query:  " + JSON.stringify(req.query) + "\n";

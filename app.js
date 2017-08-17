@@ -8,7 +8,6 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
-const logUtil = require('./utils/logUtil');
 const loggers = require('./middleware/loggers')
 
 const router = require('./routes/allRoute');

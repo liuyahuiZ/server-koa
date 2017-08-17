@@ -1,4 +1,4 @@
-var router = require('koa-router')();
+const router = require('koa-router')();
 import {getUserList, register, removeUser} from '../app/controller/user'
 
 router.get('/', function (ctx, next) {

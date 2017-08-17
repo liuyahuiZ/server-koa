@@ -1,4 +1,4 @@
-var router = require('koa-router')();
+const router = require('koa-router')();
 const i = 'i am i';
 router.get('/', async function (ctx, next) {
   ctx.state = {

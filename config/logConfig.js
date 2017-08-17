@@ -1,24 +1,24 @@
-var path = require('path');
+let path = require('path');
 
 //日志根目录
-var baseLogPath = path.resolve(__dirname, '../logs')
+let baseLogPath = path.resolve(__dirname, '../logs')
 
 //错误日志目录
-var errorPath = "/error";
+let errorPath = "/error";
 //错误日志文件名
-var errorFileName = "error";
+let errorFileName = "error";
 //错误日志输出完整路径
-var errorLogPath = baseLogPath + errorPath + "/" + errorFileName;
-// var errorLogPath = path.resolve(__dirname, "../logs/error/error");
+let errorLogPath = baseLogPath + errorPath + "/" + errorFileName;
+// let errorLogPath = path.resolve(__dirname, "../logs/error/error");
 
 
 //响应日志目录
-var responsePath = "/response";
+let responsePath = "/response";
 //响应日志文件名
-var responseFileName = "response";
+let responseFileName = "response";
 //响应日志输出完整路径
-var responseLogPath = baseLogPath + responsePath + "/" + responseFileName;
-// var responseLogPath = path.resolve(__dirname, "../logs/response/response");
+let responseLogPath = baseLogPath + responsePath + "/" + responseFileName;
+// let responseLogPath = path.resolve(__dirname, "../logs/response/response");
 
 module.exports = {
     "appenders":{

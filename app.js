@@ -7,16 +7,20 @@ const convert = require('koa-convert');
 const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
+const koaBody = require('koa-body');
 const logger = require('koa-logger');
-const loggers = require('./middleware/loggers')
+const cors = require('koa-cors');
+const loggers = require('./middleware/loggers');
 
 const router = require('./routes/allRoute');
 const db = require('./config/dbConfig');
 
 app.use(convert.compose(
+  koaBody({ multipart: true }),
   bodyparser,
   json(),
-  logger()
+  logger(),
+  cors()
 ))
 // middlewares
 app.use(convert(require('koa-static')(__dirname + '/public')));

@@ -27,8 +27,6 @@ exports.register = async (reqBody) => {
         emial: '690385384@qq.com',
         content: '123123'
     }
-    let start = new Date();
-    let ms;
     try {
         let list = await user.find({username: reqBody.uname});
         let respon = {
@@ -68,11 +66,8 @@ exports.removeUser = async (reqBody) => {
         }
         if(list && list.length > 0) {
             let list = await user.delete(dataArr);
-            let respon = {
-                code: '0000',
-                message: 'success',
-                data: list
-            }
+            respon.message = 'success'
+            respon.data = list
         }else {
             respon.message = 'the id is not exicet'
             respon.data = list

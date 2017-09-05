@@ -1,22 +1,14 @@
 import {user} from '../modal/user'
+import {resdata, errdata} from '../../utils/serve'
+
 const logUtil = require('../../utils/logUtil');
 
 exports.getUserList = async (ctx, next) => {
     try {
         let list = await user.find();
-        let respon = {
-            code: '0000',
-            message: 'success',
-            data: list
-        }
-        return respon;
+        return resdata('0000', 'success', list);
     } catch (err) {
-        let respon = {
-            code: '9999',
-            message: 'error',
-            data: err
-        }
-        return respon;
+        return errdata(err);
     }
 }
 exports.register = async (reqBody) => {
@@ -29,29 +21,19 @@ exports.register = async (reqBody) => {
     }
     try {
         let list = await user.find({username: reqBody.uname});
-        let respon = {
-            code: '0000',
-            message: '',
-        }
+        let respon = {};
         if(list && list.length > 0) {
-            respon.message = 'the user is exicet'
-            respon.data = list
+            respon = resdata('0000', 'the user is exicet', list);
         }else {
             let newUser = await user.create(dataArr);
             console.log(newUser);
-            respon.message = 'success'
-            respon.data = newUser
+            respon = resdata('0000', 'success', newUser);
         }
         return respon;
     } catch (err) {
         console.log(err)
         throw new Error(err);
-        let respon = {
-            code: '9999',
-            message: 'error',
-            data: err
-        }
-        return respon;
+        return errdata(err);
     }
 }
 exports.removeUser = async (reqBody) => {
@@ -60,26 +42,16 @@ exports.removeUser = async (reqBody) => {
     }
     try {
         let list = await user.find({username: reqBody.uname});
-        let respon = {
-            code: '0000',
-            message: '',
-        }
+        let respon = {}
         if(list && list.length > 0) {
             let list = await user.delete(dataArr);
-            respon.message = 'success'
-            respon.data = list
+            respon = resdata('0000', 'success', list);
         }else {
-            respon.message = 'the id is not exicet'
-            respon.data = list
+            respon = resdata('0000', 'the id is not exicet', list);
         }
         return respon;
     } catch (err) {
         throw new Error(err);
-        let respon = {
-            code: '9999',
-            message: 'error',
-            data: err
-        }
-        return respon;
+        return errdata(err);
     }
 }

@@ -11,6 +11,8 @@ const koaBody = require('koa-body');
 const logger = require('koa-logger');
 const cors = require('koa-cors');
 const loggers = require('./middleware/loggers');
+const test1 = require('./middleware/test1');
+const test2 = require('./middleware/test2');
 
 const router = require('./routes/allRoute');
 const db = require('./config/dbConfig');
@@ -20,12 +22,14 @@ app.use(convert.compose(
   bodyparser,
   json(),
   logger(),
-  cors()
+  cors(),
 ))
 // middlewares
 app.use(convert(require('koa-static')(__dirname + '/public')));
 // 本地log
 app.use(convert(loggers()));
+app.use(convert(test1()));
+app.use(convert(test2()));
 app.use(views(__dirname + '/views', {extension: 'jade'}));
 
 // app.use(views(__dirname + '/views-ejs', {

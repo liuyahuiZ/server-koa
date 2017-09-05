@@ -5,19 +5,16 @@ router.get('/', function (ctx, next) {
   ctx.body = 'this a users response!';
 });
 router.get('/getUser', async (ctx, next) => {
-  let list = await getUserList(ctx, next);
-  ctx.body = list;
+  ctx.body = await getUserList(ctx, next);
 });
 router.post('/register', async (ctx, next) => {
   console.log(ctx.request.body);
   let reqBody = ctx.request.body;
-  let list = await register(reqBody);
-  ctx.body = list;
+  ctx.body = await register(reqBody);
 });
-router.post('/removeUser', async (ctx, next) => {
+router.del('/removeUser', async (ctx, next) => {
   console.log(ctx.request.body);
   let reqBody = ctx.request.body;
-  let list = await removeUser(reqBody);
-  ctx.body = list;
+  ctx.body = await removeUser(reqBody);
 });
 module.exports = router;

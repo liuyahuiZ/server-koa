@@ -5,6 +5,7 @@ const logUtil = require('../../utils/logUtil');
 const config = require('../../config/serverConfig');
 import {files} from '../modal/files'
 import mkdirs from '../../utils/mkdir';
+import {resdata, errdata} from '../../utils/serve'
 
 exports.createQrcode = async (Text) => {
     try {
@@ -12,12 +13,7 @@ exports.createQrcode = async (Text) => {
         return img;
     } catch (err) {
         throw new Error(err);
-        let respon = {
-            code: '9999',
-            message: 'error',
-            data: err
-        }
-        return respon;
+        return errdata(err);
     }
 }
 exports.readFile =  async (id) => {
@@ -27,18 +23,10 @@ exports.readFile =  async (id) => {
         if(list && list.length > 0) {
             return fs.readFileSync(list[0].content);   
         } else {
-            return {
-                code: '9999',
-                message: 'can not find file',
-            }
+            return errdata(null,'9999', 'can not find file')
         }
     } catch (err) {
-        let respon = {
-            code: '9999',
-            message: 'error',
-            data: err
-        }
-        return respon;
+        return errdata(err);
     }
 }
 function getFileInfo(type) {
@@ -71,6 +59,7 @@ function getFileInfo(type) {
     return {targetName: targetName,targetPaths: targetPaths, resultPath: resultPath, relativePath: relativePath}
 }
 exports.fileUp = async (file) => {
+    console.log(file)
     let tmpPath = file.path;
     let type = file.type;
     
@@ -89,39 +78,20 @@ exports.fileUp = async (file) => {
     try {
         let newFile = await files.create(dataArr);
         console.log(newFile);
-        let respon = {
-            code: '0000',
-            message: 'success',
-            data: newFile
-        }
-        return respon;
+        return resdata('0000', 'success', newFile);;
     } catch (err) {
         console.log(err)
         throw new Error(err);
-        let respon = {
-            code: '9999',
-            message: 'error',
-            data: err
-        }
-        return respon;
+        return errdata(err);
     }
 }
 exports.fileList = async (ctx, next) => { 
     try {
         let list = await files.find();
-        let respon = {
-            code: '0000',
-            message: 'success',
-            data: list
-        }
-        return respon;
+        return resdata('0000', 'success', list);
     } catch (err) {
-        let respon = {
-            code: '9999',
-            message: 'error',
-            data: err
-        }
-        return respon;
+        throw new Error(err);
+        return errdata(err);
     }
 }
 exports.removeFile = async (reqBody) => {
@@ -130,27 +100,17 @@ exports.removeFile = async (reqBody) => {
     }
     try {
         let list = await files.find({_id: reqBody.id});
-        let respon = {
-            code: '0000',
-            message: '',
-        }
+        let respon = {}
         if(list && list.length > 0) {
             let unlinkStatus = fs.unlinkSync(list[0].content);
             let deletes = await files.delete(dataArr);
-            respon.data = deletes
-            respon.message = 'success'
+            respon = resdata('0000', 'success', deletes);
         }else {
-            respon.message = 'the id is not exicet'
-            respon.data = list
+            respon = resdata('0000', 'the id is not exicet', list); 
         }
         return respon;
     } catch (err) {
         throw new Error(err);
-        let respon = {
-            code: '9999',
-            message: 'error',
-            data: err
-        }
-        return respon;
+        return errdata(err);
     }
 }

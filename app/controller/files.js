@@ -21,7 +21,7 @@ exports.readFile =  async (id) => {
         let list = await files.find({_id: id});
         console.log(list)
         if(list && list.length > 0) {
-            return fs.readFileSync(list[0].content);   
+            return fs.readFileSync(list[0].content);
         } else {
             return errdata(null,'9999', 'can not find file')
         }
@@ -62,11 +62,11 @@ exports.fileUp = async (file) => {
     console.log(file)
     let tmpPath = file.path;
     let type = file.type;
-    
+
     let targetInfo = getFileInfo(type);
     // console.log(targetInfo);
     mkdirs.mkdirsSync(targetInfo.targetPaths);
-    let stream = fs.createWriteStream(targetInfo.resultPath);//创建一个可写流  
+    let stream = fs.createWriteStream(targetInfo.resultPath);//创建一个可写流
     fs.createReadStream(tmpPath).pipe(stream);
     let unlinkStatus = fs.unlinkSync(tmpPath);
 
@@ -85,10 +85,32 @@ exports.fileUp = async (file) => {
         return errdata(err);
     }
 }
-exports.fileList = async (ctx, next) => { 
+exports.fileList = async (reqBody, next) => {
+  console.log(reqBody);
+    let pageindex=(reqBody.pageNum-1)*reqBody.numPerPage;
+    if(reqBody.pageNum==1){
+      pageindex=0;//o biegin
+    }
+    let limit=parseInt(reqBody.numPerPage,10);
+    const where = {skip:pageindex,limit:limit,sort:{"createTime":-1}}
     try {
-        let list = await files.find();
-        return resdata('0000', 'success', list);
+        let lists = await files.find();
+        let list = await files.find({},where);
+        let allpage=lists.length/reqBody.numPerPage
+        // console.log('allpage',allpage,parseInt(allpage),data.reqBody.numPerPage)
+        if(allpage>parseInt(allpage, 10)){
+          allpage=parseInt(allpage, 10)+1
+        }
+        let resp = {
+          "data": list,
+          "page":{
+    				"totalRecord": lists.length,
+            "pageIndex": parseInt(reqBody.pageNum,10),
+            "pageNum": limit,
+            "allpage": allpage
+    			}
+        }
+        return resdata('0000', 'success', resp);
     } catch (err) {
         throw new Error(err);
         return errdata(err);
@@ -106,7 +128,7 @@ exports.removeFile = async (reqBody) => {
             let deletes = await files.delete(dataArr);
             respon = resdata('0000', 'success', deletes);
         }else {
-            respon = resdata('0000', 'the id is not exicet', list); 
+            respon = resdata('0000', 'the id is not exicet', list);
         }
         return respon;
     } catch (err) {

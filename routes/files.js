@@ -22,12 +22,14 @@ router.get('/getImage', async (ctx, next) => {
     }
 });
 router.post('/fileUp', async (ctx, next) => {
+    console.log(ctx.request)
     console.log(ctx.request.body.files);
     const file = ctx.request.body.files.file;
     ctx.body = await fileUp(file);
 });
-router.get('/fileList', async (ctx, next) => {
-    ctx.body = await fileList(ctx, next);
+router.post('/fileList', async (ctx, next) => {
+    let reqBody = ctx.request.body;
+    ctx.body = await fileList(reqBody, next);
 });
 router.del('/removeFile', async (ctx, next) => {
     console.log(ctx.request.body);

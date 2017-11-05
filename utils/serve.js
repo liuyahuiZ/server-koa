@@ -7,7 +7,7 @@ exports.resdata=function (code, msg, data) {
 			'code': _code,
 			'message': _msg
 		},
-		'respBody':{data}
+		'respBody':data
 	}
 	return respon;
 };

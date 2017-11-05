@@ -27,10 +27,10 @@ class Files{
     constructor() {
           this.files = mongoose.model("files", FilesSchema);
     }
-    find(dataArr={}) {
+    find(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.files.find(dataArr, function(e, docs) {
+            self.files.find(dataArr,null,skip, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);

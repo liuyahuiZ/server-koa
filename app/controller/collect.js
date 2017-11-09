@@ -1,32 +1,39 @@
-import {user} from '../modal/user'
+import {collect} from '../modal/collect'
 import {resdata, errdata} from '../../utils/serve'
 
 const logUtil = require('../../utils/logUtil');
 
-exports.getUserList = async (ctx, next) => {
+exports.getCollectList = async (ctx, next) => {
     try {
-        let list = await user.find();
+        let list = await collect.find();
         return resdata('0000', 'success', list);
     } catch (err) {
         return errdata(err);
     }
 }
-exports.register = async (reqBody) => {
+exports.getTheCollectList = async (reqBody) => {
     let dataArr = {
-        username: reqBody.username,
-        userid: reqBody.userid,
-        password: '123456',
-        phone: '',
-        emial: '',
-        content: '123123'
+        fileid: reqBody.fileid,
     }
     try {
-        let list = await user.find({userid: reqBody.userid});
+        let list = await collect.find(dataArr);
+        return resdata('0000', 'success', list);
+    } catch (err) {
+        return errdata(err);
+    }
+}
+exports.create = async (reqBody) => {
+    let dataArr = {
+        fileid: reqBody.fileid,
+        userid: reqBody.userid,
+    }
+    try {
+        let list = await collect.find(dataArr);
         let respon = {};
         if(list && list.length > 0) {
-            respon = resdata('0000', 'the user is exicet', list);
+            respon = resdata('0013', 'the collect is exicet', list);
         }else {
-            let newUser = await user.create(dataArr);
+            let newUser = await collect.create(dataArr);
             console.log(newUser);
             respon = resdata('0000', 'success', newUser);
         }
@@ -37,15 +44,15 @@ exports.register = async (reqBody) => {
         return errdata(err);
     }
 }
-exports.removeUser = async (reqBody) => {
+exports.removeCollect = async (reqBody) => {
     let dataArr = {
-        id: reqBody.id,
+        _id: reqBody.id,
     }
     try {
-        let list = await user.find({username: reqBody.uname});
+        let list = await collect.find(dataArr);
         let respon = {}
         if(list && list.length > 0) {
-            let list = await user.delete(dataArr);
+            let list = await collect.delete(dataArr);
             respon = resdata('0000', 'success', list);
         }else {
             respon = resdata('0000', 'the id is not exicet', list);

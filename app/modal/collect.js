@@ -1,9 +1,8 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-let FilesSchema = new Schema({
-    fileName: String,
-    filePath: String,
-    content: String,
+let CollectSchema = new Schema({
+    collectid: String,
+    fileid: String,
     userid: String,
 	createTime: {
         type: Date,
@@ -15,7 +14,7 @@ let FilesSchema = new Schema({
     },
 })
 
-FilesSchema.pre('save', function(next) {
+CollectSchema.pre('save', function(next) {
     if (this.isNew) {
       this.createTime = this.updateTime = Date.now()
     }
@@ -24,14 +23,14 @@ FilesSchema.pre('save', function(next) {
     }
     next()
 })
-class Files{
+class Collect{
     constructor() {
-          this.files = mongoose.model("files", FilesSchema);
+          this.collect = mongoose.model("collect", CollectSchema);
     }
     find(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.files.find(dataArr,null,skip, function(e, docs) {
+            self.collect.find(dataArr,null,skip, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);
@@ -44,10 +43,9 @@ class Files{
     create(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            let user = new self.files({
-                fileName: dataArr.fileName,
-                filePath: dataArr.filePath,
-                content: dataArr.content,
+            let user = new self.collect({
+                collectid: Date.parse(new Date()),
+                fileid: dataArr.fileid,
                 userid: dataArr.userid
             });
             user.save(function(e, data, numberAffected) {
@@ -63,7 +61,7 @@ class Files{
     delete(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.files.remove({
+            self.collect.remove({
                 _id: dataArr.id
             }, function(e, data) {
                 if(e){
@@ -76,5 +74,5 @@ class Files{
     }
 }
 
-let files = new Files()
-export {files}
+let collect = new Collect()
+export {collect}

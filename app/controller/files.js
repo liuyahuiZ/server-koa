@@ -29,6 +29,19 @@ exports.readFile =  async (id) => {
         return errdata(err);
     }
 }
+exports.fileDetail =  async (id) => {
+    try {
+        let list = await files.find({_id: id});
+        console.log(list)
+        let resp = {
+          "data": list,
+        }
+        return resdata('0000', 'success', resp);
+    } catch (err) {
+        throw new Error(err);
+        return errdata(err);
+    }
+}
 function getFileInfo(type) {
     let uploadPath = config.root+ '/uploads/';
     let extensionName = "";
@@ -58,7 +71,7 @@ function getFileInfo(type) {
     let resultPath = targetPaths + '/'+ targetName;
     return {targetName: targetName,targetPaths: targetPaths, resultPath: resultPath, relativePath: relativePath}
 }
-exports.fileUp = async (file) => {
+exports.fileUp = async (file, userid) => {
     console.log(file)
     let tmpPath = file.path;
     let type = file.type;
@@ -74,6 +87,7 @@ exports.fileUp = async (file) => {
         fileName: targetInfo.targetName,
         filePath: targetInfo.relativePath,
         content: targetInfo.resultPath,
+        userid: userid
     }
     try {
         let newFile = await files.create(dataArr);

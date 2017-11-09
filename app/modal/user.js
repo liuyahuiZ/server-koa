@@ -1,6 +1,7 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 let UserSchema = new Schema({
+	userid:String,
 	username:String,
 	phone:String,
 	password: String,
@@ -49,6 +50,7 @@ class User{
         const self = this;
         return new Promise(function (resolve, reject){
             let user = new self.users({
+								userid: dataArr.userid,
                 username: dataArr.username,
                 password: dataArr.password,
                 phone: dataArr.phone,

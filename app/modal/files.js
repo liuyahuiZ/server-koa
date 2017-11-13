@@ -5,6 +5,7 @@ let FilesSchema = new Schema({
     filePath: String,
     content: String,
     userid: String,
+    collect: Object,
 	createTime: {
         type: Date,
         dafault: Date.now()

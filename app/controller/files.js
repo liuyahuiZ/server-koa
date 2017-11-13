@@ -3,7 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const logUtil = require('../../utils/logUtil');
 const config = require('../../config/serverConfig');
-import {files} from '../modal/files'
+import {files} from '../modal/files';
+import {collect} from '../modal/collect';
 import mkdirs from '../../utils/mkdir';
 import {resdata, errdata} from '../../utils/serve'
 
@@ -110,6 +111,13 @@ exports.fileList = async (reqBody, next) => {
     try {
         let lists = await files.find();
         let list = await files.find({},where);
+        for(let i=0; i<list.length; i++){
+          let dataArr = {
+              fileid: list[i]._id,
+          }
+          let collects = await collect.find(dataArr);
+          list[i].collect=collects;
+        }
         let allpage=lists.length/reqBody.numPerPage
         // console.log('allpage',allpage,parseInt(allpage),data.reqBody.numPerPage)
         if(allpage>parseInt(allpage, 10)){

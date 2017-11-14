@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import {getTheCollectList, create, removeCollect} from '../app/controller/collect'
+import {getTheCollectList,getCollectList, create, removeCollect} from '../app/controller/collect'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a getTheCollectList response!';
@@ -7,6 +7,11 @@ router.get('/', function (ctx, next) {
 router.get('/getCollect', async (ctx, next) => {
   console.log(ctx.query.id);
   ctx.body = await getTheCollectList(ctx.query);
+});
+router.post('/findAllCollects', async (ctx, next) => {
+  console.log(ctx.request.body);
+  let reqBody = ctx.request.body;
+  ctx.body = await getCollectList(reqBody);
 });
 router.post('/findCollects', async (ctx, next) => {
   console.log(ctx.request.body);

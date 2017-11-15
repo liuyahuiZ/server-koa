@@ -4,6 +4,7 @@ let TokenSchema = new Schema({
     tokenid: String,
     limit: String,
     startTmp: String,
+    jsticket: String,
 	createTime: {
         type: Date,
         dafault: Date.now()
@@ -47,6 +48,7 @@ class Token{
                 tokenid: dataArr.tokenid,
                 limit: dataArr.limit,
                 startTmp: dataArr.startTmp,
+                jsticket: dataArr.jsticket
             });
             user.save(function(e, data, numberAffected) {
                 // if (e) response.send(e.message);

@@ -7,6 +7,9 @@ router.get('/', function (ctx, next) {
 router.get('/getToken', async (ctx, next) => {
   ctx.body = await getAccessToken(ctx, next);
 });
+router.get('/sign', async (ctx, next) => {
+  ctx.body = await sign(ctx, next);
+});
 router.post('/sign', async (ctx, next) => {
   ctx.body = await sign(ctx, next);
 });

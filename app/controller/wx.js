@@ -1,6 +1,6 @@
 import {token} from '../modal/token'
 import {resdata, errdata} from '../../utils/serve'
-import https from 'https'
+import request from 'request'
 
 const logUtil = require('../../utils/logUtil');
 
@@ -14,35 +14,14 @@ async function getToken() {
           method: 'GET',
           hostname: 'api.weixin.qq.com',
           port: 80,
-          path: '/cgi-bin/token?grant_type=client_credential&appid='+APPID+'&secret='+APPSECRET,
-          headers: {
-              'Content-Type': "application/x-www-form-urlencoded",
-          }
+          path: '/cgi-bin/token?grant_type=client_credential&appid='+APPID+'&secret='+APPSECRET
       };
-      let req = https.request(options, function (res) {
-          console.log('STATUS: ' + res.statusCode);
-          console.log('HEADERS: ' + JSON.stringify(res.headers));
-          res.setEncoding('utf8');
-          res.on('data', function (chunk) {
-              console.log('respone:',chunk);
-              resolve(chunk);
-              // var result=JSON.parse(chunk);
-           //    console.log('BODY: ' + chunk);
 
-              // fs.writeFile('../'+codename+'/package.json', JSON.stringify(packages),  function(err) {
-              //     if (err) {
-              //         return console.error(err);
-              //     }
-              // });
-          });
-      });
-
-      req.on('error', function (e) {
-          console.log('problem with request: ' + e.message);
-          reject(e);
-      });
-
-      req.end();
+      request('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' + APPID + '&secret=' + APPSECRET , function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          console.log(body) // Show the HTML for the baidu homepage.
+        }
+      })
     })
 }
 exports.getAccessToken = async (ctx, next) => {

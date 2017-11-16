@@ -75,7 +75,8 @@ exports.getAccessToken = async (ctx, next) => {
 
 exports.sign = async (reqBody) => {
     const noncestr='Wm3WZYTPz0wzccnW12';
-    const url = reqBody.url;
+    const url = 'http://futong.1dospace.com/';
+    console.log(reqBody.url)
     const timestamp = Date.parse(new Date)/1000;
     try {
         const where = {skip:0,limit:5,sort:{"createTime":-1}}

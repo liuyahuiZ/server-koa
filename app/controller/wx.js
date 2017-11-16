@@ -78,7 +78,8 @@ exports.sign = async (ctx, next) => {
     const url = 'http://futong.1dospace.com/';
     const timestamp = Date.parse(new Date)/1000;
     try {
-        let list = await token.find();
+        const where = {skip:0,limit:5,sort:{"createTime":-1}}
+        let list = await token.find({}, where);
         console.log('list:',list);
         let Now = Date.parse(new Date);
         if(list&&list.length>0&& (Now - list[0].startTmp) /1000 < list[0].limit) {

@@ -31,7 +31,7 @@ class Token{
     find(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.token.find(dataArr,null,{sort:{"_id":-1}}, function(e, docs) {
+            self.token.find(dataArr,null,skip, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);

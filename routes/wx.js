@@ -8,9 +8,13 @@ router.get('/getToken', async (ctx, next) => {
   ctx.body = await getAccessToken(ctx, next);
 });
 router.get('/sign', async (ctx, next) => {
-  ctx.body = await sign(ctx, next);
+  console.log(ctx.request.body);
+  let reqBody = ctx.request.body;
+  ctx.body = await sign(reqBody);
 });
 router.post('/sign', async (ctx, next) => {
-  ctx.body = await sign(ctx, next);
+  // console.log(ctx.request.body);
+  let reqBody = ctx.request.body;
+  ctx.body = await sign(reqBody);
 });
 module.exports = router;

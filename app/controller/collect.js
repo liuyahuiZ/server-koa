@@ -6,7 +6,8 @@ const logUtil = require('../../utils/logUtil');
 exports.getCollectList = async (ctx, next) => {
     try {
         let list = await collect.find();
-        return resdata('0000', 'success', list);
+        let obg = {length: list.length}
+        return resdata('0000', 'success', obg);
     } catch (err) {
         return errdata(err);
     }

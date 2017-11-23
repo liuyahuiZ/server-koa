@@ -22,6 +22,24 @@ exports.getTheCollectList = async (reqBody) => {
         return errdata(err);
     }
 }
+exports.docreate = async (reqBody) => {
+    let dataArr = {
+        fileid: reqBody.fileid,
+        userid: reqBody.userid,
+    }
+    try {
+          for(let i=0;i<reqBody.number;i++){
+            let newUser = await collect.create(dataArr);
+            console.log(newUser);
+          }
+          let respon = resdata('0000', 'success');
+        return respon;
+    } catch (err) {
+        console.log(err)
+        throw new Error(err);
+        return errdata(err);
+    }
+}
 exports.create = async (reqBody) => {
     let dataArr = {
         fileid: reqBody.fileid,

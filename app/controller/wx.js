@@ -2,14 +2,15 @@ import {token} from '../modal/token'
 import {resdata, errdata} from '../../utils/serve'
 import request from 'request'
 import sha1 from 'sha1'
+import config from '../../config/menuConfig'
 
 const logUtil = require('../../utils/logUtil');
 
 async function getToken() {
     const self = this;
     return new Promise(function (resolve, reject){
-      let APPID = 'wxdbe18f838fcee2ba';
-      let APPSECRET = 'c4ed6f5686ede08670db66769dfc63b4'
+      let APPID = 'wx15145e4f7b434571';
+      let APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
       let options = {
           method: 'GET',
@@ -42,9 +43,37 @@ async function getJsapiTicket(token) {
       })
     })
 }
+async function getHistoryToken(){
+  const where = {skip:0,limit:5,sort:{"createTime":-1}}
+  let list = await token.find({}, where);
+  console.log('list:',list);
+  let Now = Date.parse(new Date);
+  if(list&&list.length>0&& (Now - list[0].startTmp) /1000 < list[0].limit) {
+     console.log('has');
+    return list[0];
+  }else {
+    console.log('empty')
+    let tokens = await getToken();
+    console.log(tokens, typeof tokens);
+    let newToken = JSON.parse(tokens);
+    let jsticket = await getJsapiTicket(newToken.access_token);
+    let newJsticket = JSON.parse(jsticket);
+    console.log(newJsticket, typeof newJsticket);
+    let dataArr= {
+      tokenid: newToken.access_token,
+      limit: newToken.expires_in,
+      jsticket: newJsticket.ticket,
+      startTmp: Date.parse(new Date),
+    }
+    let newUser = await token.create(dataArr);
+    console.log(newUser);
+    return dataArr;
+  }
+}
 exports.getAccessToken = async (ctx, next) => {
     try {
-        let list = await token.find();
+        const where = {skip:0,limit:5,sort:{"createTime":-1}}
+        let list = await token.find({}, where);
         console.log('list:',list);
         let Now = Date.parse(new Date);
         if(list&&list.length>0&& (Now - list[0].startTmp) /1000 < list[0].limit) {
@@ -122,3 +151,19 @@ exports.sign = async (reqBody) => {
         return errdata(err);
     }
 }
+
+exports.createMenu = async (ctx, next) => {
+    try {
+        let tokens = await getHistoryToken();
+        console.log(tokens, typeof tokens, config);
+        let newToken = JSON.parse(tokens);
+
+        let dataArr= {
+        }
+
+        return respon = resdata('0000', 'success', dataArr);
+    } catch (err) {
+        return errdata(err);
+    }
+}
+

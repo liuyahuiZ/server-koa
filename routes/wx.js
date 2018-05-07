@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import {getAccessToken, sign} from '../app/controller/wx'
+import {getAccessToken, sign, createMenu} from '../app/controller/wx'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a users response!';
@@ -17,4 +17,8 @@ router.post('/sign', async (ctx, next) => {
   let reqBody = ctx.request.body;
   ctx.body = await sign(reqBody);
 });
+
+router.get('createMenu', , async (ctx, next) => {
+  ctx.body = await createMenu(ctx, next);
+})
 module.exports = router;

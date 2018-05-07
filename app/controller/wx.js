@@ -48,7 +48,7 @@ async function createMenusReq(token) {
     const self = this;
     return new Promise(function (resolve, reject){
       let options = {
-          url: 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='+token.tokenid
+          url: 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='+token.tokenid,
           method: 'POST',
           json: true,
           headers: {

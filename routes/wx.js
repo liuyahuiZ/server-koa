@@ -18,7 +18,7 @@ router.post('/sign', async (ctx, next) => {
   ctx.body = await sign(reqBody);
 });
 
-router.get('createMenu', async (ctx, next) => {
+router.get('/createMenu', async (ctx, next) => {
   ctx.body = await createMenu(ctx, next);
 })
 module.exports = router;

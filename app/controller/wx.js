@@ -54,7 +54,7 @@ async function createMenusReq(token) {
           headers: {
               "content-type": "application/json",
           },
-          body: JSON.stringify(config)
+          body: config
         };
 
         request( options , function (error, response, body) {

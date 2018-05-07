@@ -43,6 +43,31 @@ async function getJsapiTicket(token) {
       })
     })
 }
+
+async function createMenusReq(token) {
+    const self = this;
+    return new Promise(function (resolve, reject){
+      let options = {
+          url: 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='+token.tokenid
+          method: 'POST',
+          json: true,
+          headers: {
+              "content-type": "application/json",
+          },
+          body: JSON.stringify(config)
+        };
+
+        request( options , function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            console.log(body) // Show the HTML for the baidu homepage.
+            resolve(body);
+          } else {
+            reject(error);
+          }
+        })
+    })
+}
+
 async function getHistoryToken(){
   const where = {skip:0,limit:5,sort:{"createTime":-1}}
   let list = await token.find({}, where);
@@ -155,13 +180,11 @@ exports.sign = async (reqBody) => {
 exports.createMenu = async (ctx, next) => {
     try {
         let tokens = await getHistoryToken();
-        console.log(tokens, typeof tokens, config);
-        let newToken = JSON.parse(tokens);
+        console.log(tokens, JSON.stringify(config));
 
-        let dataArr= {
-        }
-
-        return respon = resdata('0000', 'success', dataArr);
+        let creatResult = await createMenusReq(tokens);
+        console.log(creatResult);
+        return respon = resdata('0000', 'success', creatResult);
     } catch (err) {
         return errdata(err);
     }

@@ -232,3 +232,4 @@ exports.senAllMessage = async (ctx, next) => {
     } catch (err) {
         return errdata(err);
     }
+}

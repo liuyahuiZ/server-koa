@@ -68,6 +68,36 @@ async function createMenusReq(token) {
     })
 }
 
+async function sendMessageReq(token) {
+    const self = this;
+    return new Promise(function (resolve, reject){
+      let options = {
+          url: 'https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token='+token.tokenid,
+          method: 'POST',
+          json: true,
+          headers: {
+              "content-type": "application/json",
+          },
+          body: {
+             "touser":[
+              "o7vpA1s0OLLSrPK47Y5sLNDI7NKs",
+              "o7vpA1lYSUsCMwDnA45ggkq4FE3A"
+             ],
+             "msgtype": "text",
+             "text": { "content": "hello from boxer."}
+          }
+        };
+
+        request( options , function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            console.log(body) // Show the HTML for the baidu homepage.
+            resolve(body);
+          } else {
+            reject(error);
+          }
+        })
+    })
+}
 async function getHistoryToken(){
   const where = {skip:0,limit:5,sort:{"createTime":-1}}
   let list = await token.find({}, where);
@@ -190,3 +220,15 @@ exports.createMenu = async (ctx, next) => {
     }
 }
 
+// 群发消息
+exports.senAllMessage = async (ctx, next) => {
+    try {
+        let tokens = await getHistoryToken();
+        console.log(tokens, JSON.stringify(config));
+
+        let creatResult = await sendMessageReq(tokens);
+        console.log(creatResult);
+        return respon = resdata('0000', 'success', creatResult);
+    } catch (err) {
+        return errdata(err);
+    }

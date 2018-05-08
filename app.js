@@ -28,8 +28,8 @@ app.use(convert.compose(
 app.use(convert(require('koa-static')(__dirname + '/public')));
 // 本地log
 app.use(convert(loggers()));
-app.use(convert(test1()));
-app.use(convert(test2()));
+// app.use(convert(test1()));
+// app.use(convert(test2()));
 app.use(views(__dirname + '/views', {extension: 'jade'}));
 
 // app.use(views(__dirname + '/views-ejs', {

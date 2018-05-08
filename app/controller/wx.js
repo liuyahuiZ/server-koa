@@ -68,7 +68,8 @@ async function createMenusReq(token) {
     })
 }
 
-async function sendMessageReq(token) {
+//群发发送消息
+async function sendMessageReq(token, text) {
     const self = this;
     return new Promise(function (resolve, reject){
       let options = {
@@ -81,10 +82,14 @@ async function sendMessageReq(token) {
           body: {
              "touser":[
               "o7vpA1s0OLLSrPK47Y5sLNDI7NKs",
-              "o7vpA1lYSUsCMwDnA45ggkq4FE3A"
+              "o7vpA1lYSUsCMwDnA45ggkq4FE3A",
+              "o7vpA1ozO-FNQ1pLFyEyXwplLZhU",
+              "o7vpA1tpsXU85-jue6jUONdCHt6k",
+              "o7vpA1qMt3wBqb-_MRJbjexMMKys",
+              "o7vpA1ihPw-TV_iTLuRHuJtLZQZc"
              ],
              "msgtype": "text",
-             "text": { "content": "hello from boxer."}
+             "text": { "content": text || 'hello!'}
           }
         };
 
@@ -98,10 +103,78 @@ async function sendMessageReq(token) {
         })
     })
 }
+
+// 发送消息模版
+async function sendTemplateReq(token, text) {
+    const self = this;
+    return new Promise(function (resolve, reject){
+      let options = {
+          url: 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='+token.tokenid,
+          method: 'POST',
+          json: true,
+          headers: {
+              "content-type": "application/json",
+          },
+          body: {
+             "touser":"o7vpA1s0OLLSrPK47Y5sLNDI7NKs",
+             "template_id": "DeLNpFR0fO5FZ0fanrtLPuPhOvxJjxrIq8Fgsiyq9Yk",
+             "url":"http://www.wetalks.cn/F2E",
+             "data":{
+                   "first": {
+                       "value":"恭喜你充值成功！",
+                       "color":"#173177"
+                   },
+                   "keyword1":{
+                       "value":"巧克力",
+                       "color":"#173177"
+                   },
+                   "keyword2": {
+                       "value":"39.8元",
+                       "color":"#173177"
+                   }
+           }
+          }
+        };
+
+        request( options , function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            console.log(body) // Show the HTML for the baidu homepage.
+            resolve(body);
+          } else {
+            reject(error);
+          }
+        })
+    })
+}
+
+// 获取关注用户列表
+async function getUserListReq(token, text) {
+    const self = this;
+    return new Promise(function (resolve, reject){
+      let options = {
+          url: 'https://api.weixin.qq.com/cgi-bin/user/get?access_token='+token.tokenid,
+          method: 'GET',
+          json: true,
+          headers: {
+              "content-type": "application/json",
+          }
+        };
+
+        request( options , function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            console.log(body) // Show the HTML for the baidu homepage.
+            resolve(body);
+          } else {
+            reject(error);
+          }
+        })
+    })
+}
+
 async function getHistoryToken(){
   const where = {skip:0,limit:5,sort:{"createTime":-1}}
   let list = await token.find({}, where);
-  console.log('list:',list);
+  console.log('list:',list[0]);
   let Now = Date.parse(new Date);
   if(list&&list.length>0&& (Now - list[0].startTmp) /1000 < list[0].limit) {
      console.log('has');
@@ -150,7 +223,7 @@ exports.getAccessToken = async (ctx, next) => {
           }
           let newUser = await token.create(dataArr);
           console.log(newUser);
-          return respon = resdata('0000', 'success', dataArr);
+          return resdata('0000', 'success', dataArr);
         }
     } catch (err) {
         return errdata(err);
@@ -207,6 +280,7 @@ exports.sign = async (reqBody) => {
     }
 }
 
+//创建菜单
 exports.createMenu = async (ctx, next) => {
     try {
         let tokens = await getHistoryToken();
@@ -214,21 +288,44 @@ exports.createMenu = async (ctx, next) => {
 
         let creatResult = await createMenusReq(tokens);
         console.log(creatResult);
-        return respon = resdata('0000', 'success', creatResult);
+        return resdata('0000', 'success', creatResult);
     } catch (err) {
         return errdata(err);
     }
 }
 
 // 群发消息
-exports.senAllMessage = async (ctx, next) => {
+exports.senAllMessage = async (reqBody) => {
     try {
         let tokens = await getHistoryToken();
-        console.log(tokens, JSON.stringify(config));
+        let creatResult = await sendMessageReq(tokens, reqBody.msg);
+        console.log('creatResult:', creatResult);
+        return resdata('0000', 'success', creatResult);
+    } catch (err) {
+        return errdata(err);
+    }
+}
 
-        let creatResult = await sendMessageReq(tokens);
-        console.log(creatResult);
-        return respon = resdata('0000', 'success', creatResult);
+// 发送模版消息
+exports.senTemplateMessage = async (reqBody) => {
+    try {
+        let tokens = await getHistoryToken();
+        let creatResult = await sendTemplateReq(tokens);
+        console.log('sendTemplateReq:', creatResult);
+        return resdata('0000', 'success', creatResult);
+    } catch (err) {
+        return errdata(err);
+    }
+}
+
+
+// 获取用户列表
+exports.getUserList = async (reqBody) => {
+    try {
+        let tokens = await getHistoryToken();
+        let creatResult = await getUserListReq(tokens);
+        console.log('getUserList:', creatResult);
+        return resdata('0000', 'success', creatResult);
     } catch (err) {
         return errdata(err);
     }

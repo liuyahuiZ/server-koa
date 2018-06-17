@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import {getAccessToken, sign, createMenu, senAllMessage, senTemplateMessage, getUserList} from '../app/controller/wx'
+import {getAccessToken, sign, createMenu, senAllMessage, senTemplateMessage, getUserList, getWebAccessToken} from '../app/controller/wx'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a users response!';
@@ -35,6 +35,12 @@ router.get('/senTemplateMessage', async (ctx, next) => {
 router.get('/getUserList', async (ctx, next) => {
   console.log(ctx.query);
   ctx.body = await getUserList(ctx.query);
+})
+
+router.post('/getWebAccessToken', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log(reqBody);
+  ctx.body = await getWebAccessToken(reqBody);
 })
 
 module.exports = router;

@@ -30,6 +30,39 @@ async function getToken() {
     })
 }
 
+//获取网页授权token
+async function getWebToken(code) {
+    const self = this;
+    return new Promise(function (resolve, reject){
+      let APPID = 'wx15145e4f7b434571';
+      let APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
+
+      request('https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + APPID + '&secret=' + APPSECRET + '&code='+ code +'&grant_type=authorization_code' , function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          console.log(body) // Show the HTML for the baidu homepage.
+        //   const userInfo = await getUserInfo();
+          resolve(body);
+        } else {
+          reject(error);
+        }
+      })
+    })
+}
+
+//获取用户信息
+async function getUserInfo(obj) {
+    return new Promise(function (resolve, reject){
+      request('https://api.weixin.qq.com/sns/userinfo?access_token='+ obj.token +'&openid='+ obj.openid +'&lang=zh_CN' , function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          console.log(body) // Show the HTML for the baidu homepage.
+          resolve(body);
+        } else {
+          reject(error);
+        }
+      })
+    })
+}
+
 async function getJsapiTicket(token) {
     const self = this;
     return new Promise(function (resolve, reject){
@@ -326,6 +359,19 @@ exports.getUserList = async (reqBody) => {
         let creatResult = await getUserListReq(tokens);
         console.log('getUserList:', creatResult);
         return resdata('0000', 'success', creatResult);
+    } catch (err) {
+        return errdata(err);
+    }
+}
+
+// 获取网页授权token
+exports.getWebAccessToken = async (reqBody) => {
+    try {
+        let tokens = await getWebToken(reqBody.code);
+        console.log('tokens', tokens)
+        let userInfo = await getUserInfo(tokens);
+        console.log('creatResult:', userInfo);
+        return resdata('0000', 'success', userInfo);
     } catch (err) {
         return errdata(err);
     }

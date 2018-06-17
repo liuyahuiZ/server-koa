@@ -52,7 +52,7 @@ async function getWebToken(code) {
 //获取用户信息
 async function getUserInfo(obj) {
     return new Promise(function (resolve, reject){
-      request('https://api.weixin.qq.com/sns/userinfo?access_token='+ obj.token +'&openid='+ obj.openid +'&lang=zh_CN' , function (error, response, body) {
+      request('https://api.weixin.qq.com/sns/userinfo?access_token='+ obj.access_token +'&openid='+ obj.openid +'&lang=zh_CN' , function (error, response, body) {
         if (!error && response.statusCode == 200) {
           console.log(body) // Show the HTML for the baidu homepage.
           resolve(body);

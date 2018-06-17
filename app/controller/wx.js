@@ -52,8 +52,9 @@ async function getWebToken(code) {
 //获取用户信息
 async function getUserInfo(obj) {
     return new Promise(function (resolve, reject){
-      console.log('access_token', obj.access_token);
-      request('https://api.weixin.qq.com/sns/userinfo?access_token='+ obj.access_token +'&openid='+ obj.openid +'&lang=zh_CN' , function (error, response, body) {
+      let req = JSON.parse(obj);
+      console.log('access_token', obj, JSON.parse(obj), obj.access_token);
+      request('https://api.weixin.qq.com/sns/userinfo?access_token='+ req.access_token +'&openid='+ req.openid +'&lang=zh_CN' , function (error, response, body) {
         if (!error && response.statusCode == 200) {
           console.log(body) // Show the HTML for the baidu homepage.
           resolve(body);
@@ -369,7 +370,7 @@ exports.getUserList = async (reqBody) => {
 exports.getWebAccessToken = async (reqBody) => {
     try {
         let tokens = await getWebToken(reqBody.code);
-        console.log('tokens', tokens)
+        console.log('tokens', tokens, typeof(tokens))
         let userInfo = await getUserInfo(tokens);
         console.log('creatResult:', userInfo);
         return resdata('0000', 'success', userInfo);

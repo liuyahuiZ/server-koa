@@ -58,6 +58,26 @@ class Collect{
             });
         })
     }
+    update(dataArr){
+        const self = this;
+        return new Promise(function (resolve, reject){
+            let arr = {
+                collectid: Date.parse(new Date()),
+                fileid: dataArr.fileid,
+                userid: dataArr.userid
+            };
+            self.collect.update({
+                _id: dataArr.id,
+              }, arr,function(e, data, numberAffected) {
+                // if (e) response.send(e.message);
+                if(e){
+                    reject(e);
+                }else{
+                    resolve(data);
+                }
+            });
+        })
+    }
     delete(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){

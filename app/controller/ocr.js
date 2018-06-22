@@ -9,7 +9,9 @@ import {files} from '../modal/files';
 import {resdata, errdata} from '../../utils/serve';
 
 global.idUrl = 'https://v2-auth-api.visioncloudapi.com/ocr/idcard/stateless';
+global.idMarkUrl = 'https://v2-auth-api.visioncloudapi.com/ocr/idcard_mask/stateless';
 global.silentUrl = 'https://v2-auth-api.visioncloudapi.com/identity/silent_idnumber_verification/stateless';
+global.bankUrl = 'https://v2-auth-api.visioncloudapi.com/ocr/bankcard/stateless';
 
 function authorize() {
     var signatureArray = []
@@ -24,7 +26,8 @@ function authorize() {
     return authorization
 }
 
-function reqIdFount(filePath, faceType){
+//上传身份证
+async function reqIdFount(filePath, faceType){
     // console.log(filePath);
     return new Promise(function (resolve, reject){
         let formData = new FormData();
@@ -39,6 +42,38 @@ function reqIdFount(filePath, faceType){
               'Authorization': authorize()
             },
             url: global.idUrl,
+            formData: formData
+          }, function(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body) // Show the HTML for the baidu homepage.
+                resolve(body);
+            } else {
+                reject(error);
+            }
+          })
+      })
+}
+
+
+//身份证校验 打码赛克
+async function reqIdMark(filePath, faceType){
+    // console.log(filePath);
+    return new Promise(function (resolve, reject){
+        let formData = new FormData();
+        let imageFile = fs.createReadStream(filePath);
+    
+        formData = {
+            'image_file': imageFile,
+            'side': faceType || 'auto',
+            'auto_rotate': 1,
+            'mask_number': 1,
+            'mask_address': 1
+        };
+        request.post({
+            headers: {
+              'Authorization': authorize()
+            },
+            url: global.idMarkUrl,
             formData: formData
           }, function(error, response, body) {
             if (!error && response.statusCode == 200) {
@@ -69,6 +104,7 @@ async function whiteFile(file){
     })
 }
 
+//请求活体采样
 async function reqLive(filePath, info){
     return new Promise(function (resolve, reject){
         let formData = new FormData();
@@ -97,6 +133,34 @@ async function reqLive(filePath, info){
       })
 }
 
+//识别银行卡信息
+async function reqBank(filePath, faceType){
+    // console.log(filePath);
+    return new Promise(function (resolve, reject){
+        let formData = new FormData();
+        let imageFile = fs.createReadStream(filePath);
+    
+        formData = {
+            'image_file': imageFile,
+            'auto_rotate': 1,
+        };
+        request.post({
+            headers: {
+              'Authorization': authorize()
+            },
+            url: global.bankUrl,
+            formData: formData
+          }, function(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body) // Show the HTML for the baidu homepage.
+                resolve(body);
+            } else {
+                reject(error);
+            }
+          })
+      })
+}
+
 exports.idFount = async (file, faceType) => {
     // console.log(file, faceType)
     try {
@@ -105,6 +169,20 @@ exports.idFount = async (file, faceType) => {
         let whiteRes =  await whiteFile(file);
         console.log(whiteRes);
         let reqResult = await reqIdFount(whiteRes.newRelativePath, faceType);
+        // let reqResult = await reqIdMark(whiteRes.newRelativePath, faceType);
+
+        console.log(reqResult);
+        return resdata('0000', 'success', reqResult);
+    } catch (err) {
+        console.log(err)
+        throw new Error(err);
+    }
+}
+
+exports.getBankInfo = async (file) => {
+    try {
+        let whiteRes =  await whiteFile(file);
+        let reqResult = await reqBank(whiteRes.newRelativePath);
         console.log(reqResult);
         return resdata('0000', 'success', reqResult);
     } catch (err) {

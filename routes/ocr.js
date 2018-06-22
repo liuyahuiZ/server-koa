@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import {idFount, live} from '../app/controller/ocr';
+import {idFount, live, getBankInfo} from '../app/controller/ocr';
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a users response!';
@@ -22,6 +22,13 @@ router.post('/live', async (ctx, next) => {
   const type = ctx.request.body.fields;
   console.log(type);
   ctx.body = await live(file, type);
+});
+
+router.post('/getBankInfo', async (ctx, next) => {
+  // console.log(ctx.request.body);
+  let reqBody = ctx.request.body;
+  const file = ctx.request.body.files.file;
+  ctx.body = await getBankInfo(file);
 });
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import {createQrcode, fileUp, fileList, removeFile, readFile, fileDetail} from '../app/controller/files'
+import {createQrcode, fileUp, fileList, removeFile, readFile, fileDetail, getImage} from '../app/controller/files'
 
 router.get('/', async (ctx, next) => {
     console.log(ctx);
@@ -16,6 +16,14 @@ router.post('/qrImage', async (ctx, next) => {
 router.get('/getImage', async (ctx, next) => {
     console.log(ctx.query.file);
     let list = await readFile(ctx.query.file)
+    ctx.body = list;
+    if(!list.code) {
+        ctx.res.writeHead(200, {'Content-Type': 'image/png'});
+    }
+});
+router.get('/getTheImage', async (ctx, next) => {
+    console.log(ctx.query.path);
+    let list = await getImage(ctx.query.path)
     ctx.body = list;
     if(!list.code) {
         ctx.res.writeHead(200, {'Content-Type': 'image/png'});

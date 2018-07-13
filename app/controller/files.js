@@ -30,6 +30,16 @@ exports.readFile =  async (id) => {
         return errdata(err);
     }
 }
+exports.getImage =  async (imagePath) => {
+    try {
+	    let targetPath = './';
+        let filePath = path.join(targetPath, imagePath);
+        console.log(filePath);
+        return fs.readFileSync(filePath);
+    } catch (err) {
+        return errdata(err);
+    }
+}
 exports.fileDetail =  async (id) => {
     try {
         let list = await files.find({_id: id});

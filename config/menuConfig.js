@@ -4,9 +4,20 @@
 module.exports = {
     "button": [
         {
-            "type": "view", 
-            "name": "test", 
-            "url": "http://www.wetalks.cn/F2E/"
+            "name": "wx-view", 
+            // "url": "http://www.wetalks.cn/F2E/",
+            "sub_button": [
+                {
+                    "type": "view", 
+                    "name": "F2E", 
+                    "url": "http://www.wetalks.cn/F2E/"
+                }, 
+                {
+                    "type": "click", 
+                    "name": "wx-sport", 
+                    "url": "http://www.wetalks.cn/wx-sport/"
+                }
+            ]
         }, 
         {
             "name": "菜单", 

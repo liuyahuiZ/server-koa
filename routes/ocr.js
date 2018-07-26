@@ -1,8 +1,13 @@
 const router = require('koa-router')();
 import {idFount, live, getBankInfo} from '../app/controller/ocr';
+import tree from '../config/tree.js'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a users response!';
+});
+
+router.get('/tree', function (ctx, next) {
+  ctx.body = JSON.stringify(tree);
 });
 
 router.post('/idFont', async (ctx, next) => {

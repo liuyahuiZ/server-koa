@@ -13,7 +13,7 @@ module.exports = {
                     "url": "http://www.wetalks.cn/F2E/"
                 }, 
                 {
-                    "type": "click", 
+                    "type": "view", 
                     "name": "wx-sport", 
                     "url": "http://www.wetalks.cn/wx-sport/"
                 }

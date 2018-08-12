@@ -26,3 +26,19 @@ exports.errdata=function (err, code, msg) {
 	}
 	return respon;
 };
+
+exports.raw = function (args) {
+	var keys = Object.keys(args);
+	keys = keys.sort()
+	var newArgs = {};
+	keys.forEach(function (key) {
+	  newArgs[key.toLowerCase()] = args[key];
+	});
+  
+	var string = '';
+	for (var k in newArgs) {
+	  string += '&' + k + '=' + newArgs[k];
+	}
+	string = string.substr(1);
+	return string;
+  };

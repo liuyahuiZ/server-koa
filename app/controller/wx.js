@@ -5,12 +5,12 @@ import sha1 from 'sha1'
 import config from '../../config/menuConfig'
 
 const logUtil = require('../../utils/logUtil');
+const APPID = 'wx15145e4f7b434571';
+const APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
 async function getToken() {
     const self = this;
     return new Promise(function (resolve, reject){
-      let APPID = 'wx15145e4f7b434571';
-      let APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
       let options = {
           method: 'GET',
@@ -34,8 +34,6 @@ async function getToken() {
 async function getWebToken(code) {
     const self = this;
     return new Promise(function (resolve, reject){
-      let APPID = 'wx15145e4f7b434571';
-      let APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
       request('https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + APPID + '&secret=' + APPSECRET + '&code='+ code +'&grant_type=authorization_code' , function (error, response, body) {
         if (!error && response.statusCode == 200) {

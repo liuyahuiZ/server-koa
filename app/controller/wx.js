@@ -153,20 +153,28 @@ async function sendTemplateReq(token, text) {
           },
           body: {
              "touser":"o7vpA1s0OLLSrPK47Y5sLNDI7NKs",
-             "template_id": "DeLNpFR0fO5FZ0fanrtLPuPhOvxJjxrIq8Fgsiyq9Yk",
-             "url":"http://www.wetalks.cn/F2E",
+             "template_id": "0qaJUy48eIGxslDE6pBJLs2Upmh-MRGlp8Xuz-JX8kM",
+             "url":"https://avocadomethod.cn/dist/index.html#/ClassAppointment?courseId=2",
              "data":{
                    "first": {
-                       "value":"恭喜你充值成功！",
+                       "value":"您有课程即将开始",
                        "color":"#173177"
                    },
                    "keyword1":{
-                       "value":"巧克力",
+                       "value":"增强体制训练",
                        "color":"#173177"
                    },
                    "keyword2": {
-                       "value":"39.8元",
+                       "value":"广州市XXXXXX",
                        "color":"#173177"
+                   },
+                   "keyword3": {
+                    "value":"2018年9月1号 14:30",
+                    "color":"#173177"
+                   },
+                   "remark": {
+                    "value": "具体课程详情点击查看",
+                    "color":"#173177"
                    }
            }
           }

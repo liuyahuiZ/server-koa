@@ -19,7 +19,7 @@ exports.articleList = async (reqBody) => {
         if(allPages>parseInt(allPages)){
             allPages=parseInt(allPages)+1
         }
-        console.log(allList, allList.length);
+        // console.log(allList, allList.length);
         let pageInfo = {
             allPage: allPages,
             allCount: allList.length,
@@ -37,7 +37,7 @@ exports.articleList = async (reqBody) => {
 }
 
 exports.articleDetail = async (reqBody) => {
-    console.log(reqBody.id);
+    // console.log(reqBody.id);
     try {
         let list = await article.find({_id: reqBody.id});
         let newSea = 1;

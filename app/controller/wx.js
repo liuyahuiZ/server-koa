@@ -152,7 +152,7 @@ async function sendTemplateReq(token, text) {
               "content-type": "application/json",
           },
           body: {
-             "touser":"o7vpA1s0OLLSrPK47Y5sLNDI7NKs",
+             "touser":"o0kVl082vfjO9vf8kwFmIwFk377Y",
              "template_id": "0qaJUy48eIGxslDE6pBJLs2Upmh-MRGlp8Xuz-JX8kM",
              "url":"https://avocadomethod.cn/dist/index.html#/ClassAppointment?courseId=2",
              "data":{

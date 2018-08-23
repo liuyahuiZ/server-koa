@@ -1,4 +1,5 @@
 import {token} from '../modal/token'
+import {wxuser} from '../modal/wxuser'
 import {resdata, errdata} from '../../utils/serve'
 import request from 'request'
 import sha1 from 'sha1'
@@ -191,6 +192,57 @@ async function sendTemplateReq(token, text) {
     })
 }
 
+// 发送模版
+async function sendTplReq(token, obg) {
+  const self = this;
+  return new Promise(function (resolve, reject){
+    let options = {
+        url: 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='+token.tokenid,
+        method: 'POST',
+        json: true,
+        headers: {
+            "content-type": "application/json",
+        },
+        body: {
+           "touser": obg.userOpenId,
+           "template_id": "0qaJUy48eIGxslDE6pBJLs2Upmh-MRGlp8Xuz-JX8kM",
+           "url": obg.url,
+           "data":{
+                 "first": {
+                     "value": obg.title,
+                     "color":"#173177"
+                 },
+                 "keyword1":{
+                     "value": obg.className,
+                     "color":"#173177"
+                 },
+                 "keyword2": {
+                     "value": obg.address,
+                     "color":"#173177"
+                 },
+                 "keyword3": {
+                  "value": obg.time,
+                  "color":"#173177"
+                 },
+                 "remark": {
+                  "value": "具体课程详情点击查看",
+                  "color":"#173177"
+                 }
+         }
+        }
+      };
+
+      request( options , function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          console.log(body) // Show the HTML for the baidu homepage.
+          resolve(body);
+        } else {
+          reject(error);
+        }
+      })
+  })
+}
+
 // 获取关注用户列表
 async function getUserListReq(token, text) {
     const self = this;
@@ -362,6 +414,26 @@ exports.senTemplateMessage = async (reqBody) => {
     }
 }
 
+// 发送模版消息
+exports.sendTelMessage = async (reqBody) => {
+  try {
+      let tokens = await getHistoryToken();
+      let obg = {
+        userOpenId : reqBody.openId,
+        url: reqBody.url,
+        title: reqBody.title,
+        className: reqBody.className,
+        address: reqBody.address,
+        time: reqBody.time
+      }
+      let creatResult = await sendTplReq(tokens, obg);
+      console.log('sendTemplateReq:', creatResult);
+      return resdata('0000', 'success', creatResult);
+  } catch (err) {
+      return errdata(err);
+  }
+}
+
 
 // 获取用户列表
 exports.getUserList = async (reqBody) => {
@@ -382,6 +454,18 @@ exports.getWebAccessToken = async (reqBody) => {
         console.log('tokens', tokens, typeof(tokens))
         let userInfo = await getUserInfo(tokens);
         console.log('creatResult:', userInfo);
+        const where = {skip:0,limit:5,sort:{"createTime":-1}}
+        let list = await wxuser.find({wxuserOpenId: userInfo.openid});
+        if(!(list&&list.length>0))  {
+          let result = wxuser.create({
+            wxuserOpenId: userInfo.openid,
+            wxuserName: userInfo.nickname,
+            personImg: userInfo.headimgurl,
+            content: JSON.stringify(userInfo)
+          })
+          console.log('creatResult:', result);
+        }
+
         return resdata('0000', 'success', userInfo);
     } catch (err) {
         return errdata(err);

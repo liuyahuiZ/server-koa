@@ -205,7 +205,7 @@ async function sendTplReq(token, obg) {
         },
         body: {
            "touser": obg.userOpenId,
-           "template_id": "0qaJUy48eIGxslDE6pBJLs2Upmh-MRGlp8Xuz-JX8kM",
+           "template_id": "FvYt-xylD9eqPbrevCXcKivnOj2HWBJFHWocTyvI75Y",
            "url": obg.url,
            "data":{
                  "first": {
@@ -213,19 +213,23 @@ async function sendTplReq(token, obg) {
                      "color":"#173177"
                  },
                  "keyword1":{
-                     "value": obg.className,
+                     "value": obg.addressName,
                      "color":"#173177"
                  },
                  "keyword2": {
                      "value": obg.address,
                      "color":"#173177"
                  },
+                 "keyword1":{
+                  "value": obg.className,
+                  "color":"#173177"
+              },
                  "keyword3": {
-                  "value": obg.time,
+                  "value": obg.classTime,
                   "color":"#173177"
                  },
                  "remark": {
-                  "value": "具体课程详情点击查看",
+                  "value": obg.remark,
                   "color":"#173177"
                  }
          }
@@ -365,7 +369,7 @@ exports.sign = async (reqBody) => {
             noncestr:noncestr,
             timestamp: timestamp,
             url: url,
-            jsapi_ticket:ticketMap.ticket,
+            jsapi_ticket:newJsticket.ticket,
             signature:sha1('jsapi_ticket=' + newJsticket.ticket + '&noncestr=' + noncestr + '&timestamp=' + timestamp + '&url=' + url)
           }
           console.log(newUser);

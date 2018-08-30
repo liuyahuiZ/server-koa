@@ -220,13 +220,13 @@ async function sendTplReq(token, obg) {
                      "value": obg.address,
                      "color":"#173177"
                  },
-                 "keyword1":{
-                  "value": obg.className,
-                  "color":"#173177"
-              },
-                 "keyword3": {
-                  "value": obg.classTime,
-                  "color":"#173177"
+                 "keyword3":{
+                    "value": obg.className,
+                    "color":"#173177"
+                 },
+                 "keyword4": {
+                    "value": obg.classTime,
+                    "color":"#173177"
                  },
                  "remark": {
                   "value": obg.remark,

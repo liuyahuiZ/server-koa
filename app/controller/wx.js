@@ -426,9 +426,11 @@ exports.sendTelMessage = async (reqBody) => {
         userOpenId : reqBody.openId,
         url: reqBody.url,
         title: reqBody.title,
-        className: reqBody.className,
         address: reqBody.address,
-        time: reqBody.time
+        addressName: reqBody.addressName,
+        className: reqBody.className,
+        classTime: reqBody.classTime,
+        remark: reqBody.remark
       }
       let creatResult = await sendTplReq(tokens, obg);
       console.log('sendTemplateReq:', creatResult);

@@ -197,7 +197,7 @@ async function sendTplReq(token, obg) {
   const self = this;
   return new Promise(function (resolve, reject){
     let options = {
-        url: 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='+token.tokenid,
+        url: 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='+token,
         method: 'POST',
         json: true,
         headers: {
@@ -421,7 +421,10 @@ exports.senTemplateMessage = async (reqBody) => {
 // 发送模版消息
 exports.sendTelMessage = async (reqBody) => {
   try {
-      let tokens = await getHistoryToken();
+      // let tokens = await getHistoryToken();
+      let tokens = await getToken();
+      console.log(tokens, typeof tokens);
+      let newToken = JSON.parse(tokens);
       let obg = {
         userOpenId : reqBody.openId,
         url: reqBody.url,
@@ -432,7 +435,7 @@ exports.sendTelMessage = async (reqBody) => {
         classTime: reqBody.classTime,
         remark: reqBody.remark
       }
-      let creatResult = await sendTplReq(tokens, obg);
+      let creatResult = await sendTplReq(newToken.access_token, obg);
       console.log('sendTemplateReq:', creatResult);
       return resdata('0000', 'success', creatResult);
   } catch (err) {

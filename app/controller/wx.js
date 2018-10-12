@@ -6,11 +6,11 @@ import sha1 from 'sha1'
 import config from '../../config/menuConfig'
 
 const logUtil = require('../../utils/logUtil');
-// const APPID = 'wx15145e4f7b434571';
-// const APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
+const APPID = 'wx15145e4f7b434571';
+const APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
-const APPID = 'wx9a7768b6cd7f33d0';
-const APPSECRET = 'ff721e6f29fe1cafa8f1e1e26d36434d'
+// const APPID = 'wx9a7768b6cd7f33d0';
+// const APPSECRET = 'ff721e6f29fe1cafa8f1e1e26d36434d'
 
 async function getToken() {
     const self = this;

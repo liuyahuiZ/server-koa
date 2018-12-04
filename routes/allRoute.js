@@ -9,6 +9,9 @@ const wxpay = require('./wxpay');
 const ocr = require('./ocr');
 const article = require('./article');
 const spider = require('./spider');
+const record = require('./record');
+const commonType = require('./commonType');
+
 
 router.use('/', index.routes(), index.allowedMethods());
 router.use('/users', users.routes(), users.allowedMethods());
@@ -20,5 +23,7 @@ router.use('/wxapp', wxapp.routes(), wxapp.allowedMethods());
 router.use('/ocr', ocr.routes(), ocr.allowedMethods());
 router.use('/article', article.routes(), article.allowedMethods());
 router.use('/spider', spider.routes(), spider.allowedMethods());
+router.use('/record', record.routes(), record.allowedMethods());
+router.use('/commonType', commonType.routes(), commonType.allowedMethods());
 
 module.exports = router;

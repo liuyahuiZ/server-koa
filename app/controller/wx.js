@@ -6,11 +6,11 @@ import sha1 from 'sha1'
 import config from '../../config/menuConfig'
 
 const logUtil = require('../../utils/logUtil');
-const APPID = 'wx15145e4f7b434571';
-const APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
+// const APPID = 'wx15145e4f7b434571';
+// const APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
-// const APPID = 'wx9a7768b6cd7f33d0';
-// const APPSECRET = 'ff721e6f29fe1cafa8f1e1e26d36434d'
+const APPID = 'wx9a7768b6cd7f33d0';
+const APPSECRET = '0076ac0595f2503920e88244654d7534'
 
 async function getToken() {
     const self = this;
@@ -246,6 +246,53 @@ async function sendTplReq(token, obg) {
       })
   })
 }
+ 
+async function sendCommonTplReq(token, obg) {
+  const self = this;
+  return new Promise(function (resolve, reject){
+    let keys = Object.keys(obg.keywords);
+    let values = Object.values(obg.keywords);
+    let data = {};
+    data['first'] = {
+      "value": obg.first,
+      "color":"#173177"
+    }
+    for(let i=0;i<keys.length;i++){
+      data[keys[i]] = {
+        "value": values[i],
+        "color":"#173177"
+      }
+    }
+    data['remark'] = {
+      "value": obg.remark,
+      "color":"#173177"
+    }
+    let options = {
+        url: 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='+token,
+        method: 'POST',
+        json: true,
+        headers: {
+            "content-type": "application/json",
+        },
+        body: {
+           "touser": obg.userOpenId,
+           "template_id": obg.templateId,
+           "url": obg.url,
+           "data": data
+        }
+      };
+      console.log('options', options)
+
+      request( options , function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          console.log(body) // Show the HTML for the baidu homepage.
+          resolve(body);
+        } else {
+          reject(error);
+        }
+      })
+  })
+}
 
 // 获取关注用户列表
 async function getUserListReq(token, text) {
@@ -416,6 +463,34 @@ exports.senTemplateMessage = async (reqBody) => {
     } catch (err) {
         return errdata(err);
     }
+}
+
+exports.sendCommonTplMessage = async(reqBody) => {
+  // let tplTypeArr = {
+  //   'appointSuccess': 'cgGS8bLN1zTJbLcnKADIypfw4jkFUdypjLqHQUiJqcw', //预约成功提醒
+  //   'teacherSure': 'oWhGt14gtfIKMWbADAxnMMHwS8E-lIiQ7o9s_VWuGyU', // 教练确认通知
+  //   'teacherRate': 'xfkXM-Cbp-UbpK-dJlYbxHp_ekndkIOmvN7aUl7sek0', // 教练评价通知
+  //   'classStart': 'Xb0O1VjgwK7lwxPztDWGxkk85EaIOUwRPPdiCHsGQgQ' // 预约课程开始通知
+  // }
+  try {
+    // let tokens = await getHistoryToken();
+    let tokens = await getToken();
+    console.log(tokens, typeof tokens);
+    let newToken = JSON.parse(tokens);
+    let obg = {
+      userOpenId: reqBody.openId,
+      url: reqBody.url,
+      first: reqBody.first,
+      remark: reqBody.remark,
+      templateId: reqBody.tplType,
+      keywords: reqBody.keywords
+    }
+    let creatResult = await sendCommonTplReq(newToken.access_token, obg);
+    console.log('sendTemplateReq:', creatResult);
+    return resdata('0000', 'success', creatResult);
+} catch (err) {
+    return errdata(err);
+}
 }
 
 // 发送模版消息

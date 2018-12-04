@@ -9,7 +9,7 @@ const logUtil = require('../../utils/logUtil');
 // const APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
 const APPID = 'wx9a7768b6cd7f33d0';
-const APPSECRET = 'ff721e6f29fe1cafa8f1e1e26d36434d';
+const APPSECRET = '0076ac0595f2503920e88244654d7534';
 const MCH_ID = "1502762851"
 const KEY = "Qgh989eKOz3N6TrXrL83bDRXSamLxKyq"
 //"2KUUBILDEETYOQCIITDQAI9TR2IACCJUW5Q89FEPI4G";

@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import {getAccessToken, sign, createMenu, senAllMessage, senTemplateMessage, sendTelMessage, getUserList, getWebAccessToken} from '../app/controller/wx'
+import {getAccessToken, sign, createMenu, senAllMessage, senTemplateMessage, sendTelMessage, getUserList, getWebAccessToken, sendCommonTplMessage} from '../app/controller/wx'
 import { getUpLoadToken } from '../app/controller/qiniu';
 
 router.get('/', function (ctx, next) {
@@ -53,6 +53,11 @@ router.get('/getUpToken', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
   ctx.body = await getUpLoadToken(reqBody);
+})
+
+router.post('/sendCommonTplMessage', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  ctx.body = await sendCommonTplMessage(reqBody);
 })
 
 module.exports = router;

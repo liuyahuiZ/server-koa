@@ -95,3 +95,13 @@ exports.docreate = async (reqBody) => {
         return errdata(err);
     }
 }
+
+exports.removeRecord = async (reqBody) => {
+    if(!reqBody.id) return resdata('9999', 'id is required', {});
+    try {
+        let list = await record.delete({id: reqBody.id});
+        return resdata('0000', 'success', list);
+    } catch (err) {
+        return errdata(err);
+    }
+}

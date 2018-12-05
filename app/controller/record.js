@@ -40,7 +40,7 @@ exports.getRecordList = async (reqBody) => {
 		let pageNumber = reqBody.pageNumber || 1;
         let sec = {
             typecode: reqBody.typecode,
-            user: reqBody.user
+            user: reqBody.user||'131626'
         }
         for(let it in sec){
             if(!(sec[it]&&sec[it]!=='')) {

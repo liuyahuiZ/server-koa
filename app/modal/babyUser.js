@@ -34,14 +34,14 @@ UserSchema.pre('save', function(next) {
     }
     next()
 })
-class User{
+class BabyUser{
     constructor() {
-          this.users = mongoose.model("user", UserSchema);
+          this.babyUser = mongoose.model("babyUser", UserSchema);
     }
     find(dataArr={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.users.find(dataArr, function(e, docs) {
+            self.babyUser.find(dataArr, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);
@@ -54,7 +54,7 @@ class User{
     create(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            let user = new self.users({
+            let user = new self.babyUser({
 				userid: dataArr.userid,
                 username: dataArr.username,
                 password: dataArr.password,
@@ -76,7 +76,7 @@ class User{
     delete(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.users.remove({
+            self.babyUser.remove({
                 _id: dataArr.id
             }, function(e, data) {
                 if(e){
@@ -89,5 +89,5 @@ class User{
     }
 }
 
-let user=new User()
-export {user}
+let babyUser=new BabyUser()
+export {babyUser}

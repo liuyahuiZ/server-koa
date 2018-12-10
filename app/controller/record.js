@@ -1,5 +1,7 @@
 import {record} from '../modal/record'
 import {resdata, errdata} from '../../utils/serve'
+import {commonType} from '../modal/commonType'
+import moment from 'moment';
 
 const logUtil = require('../../utils/logUtil');
 
@@ -72,6 +74,112 @@ exports.getRecordList = async (reqBody) => {
         return errdata(err);
     }
 }
+
+
+exports.getRecordListForTime = async (reqBody) => {
+    try{
+        let pageSize = reqBody.pageSize || 10;
+		let pageNumber = reqBody.pageNumber || 1;
+        let sec = {
+            typecode: reqBody.typecode,
+            user: reqBody.user||'131626'
+        }
+        for(let it in sec){
+            if(!(sec[it]&&sec[it]!=='')) {
+                delete sec[it]
+            }
+        }
+        let whereTime = {"actTimeStr":{
+            "$gt": new Date(`${reqBody.startDate} 00:00:00`).toJSON(), 
+            "$lt": new Date(`${reqBody.endDate} 23:59:59`).toJSON()
+        }};
+        sec = Object.assign({}, sec, whereTime);
+        console.log('sec:', sec)
+
+        const AllCount = await record.count(sec);
+		console.log('count:', AllCount);
+		const where = {skip: (pageNumber - 1) * pageSize, limit:pageSize, sort:{"actTimeStr":-1}}
+		let list = await record.find(sec, where);
+		return resdata('0000', 'success', {
+			pageInfo: {
+				allCount: AllCount,
+				allPage: parseFloat(AllCount / pageSize),
+				pageNumber: pageNumber,
+				pageSize: pageSize
+			},
+			record: list
+		});
+    }catch(err){
+        console.log(err);
+        return errdata(err);
+    }
+}
+
+
+async function findRecords(arr, where, skip){
+    let newArr = []
+    for(let i=0;i<arr.length;i++){
+        let whereTime = {"actTimeStr":{
+            "$gt": arr[i].startTime, 
+            "$lt": arr[i].endTime
+        }};
+        if(where){
+            whereTime = Object.assign({}, whereTime, where);
+        }
+        let dateException = await record.find(whereTime, skip);
+        // newArr.push({ time: moment(arr[i].startTime).format('YYYY-MM-DD'),  data:dateException})
+        // newArr.concat(dateException);
+        newArr.push({ time: moment(arr[i].startTime).format('YYYY-MM-DD'), typecode: where.typecode,  count: dateException.length})
+    }
+    return (newArr);    
+}
+
+// exports.getRecordListForType = async (reqBody) => {
+//     try{
+//         let typeList = await commonType.find({});
+//         let userPv = [];
+//         let typeArr = []
+//         for(let i=0;i<typeList.length;i++){
+//             typeArr.push(typeList[i].typeValue);
+//             // let result = await findRecords(time, {'typecode': typeList[i].typeValue, 'user': reqBody.user||'131626'});
+//             // // userPv.push({type: typeList[i], operas: result});
+//             // userPv.push({type: typeList[i], operas: result});
+//         }
+//         let whereTime = {"actTimeStr":{
+//             "$gt": new Date(`${reqBody.startDate} 00:00:00`).toJSON(), 
+//             "$lt": new Date(`${reqBody.endDate} 23:59:59`).toJSON()
+//         }, 'typecode': {'$in':typeArr}};
+//         let dateException = await record.find(whereTime);
+
+// 		return resdata('0000', 'success', {
+// 			record: dateException
+// 		});
+//     }catch(err){
+//         console.log(err);
+//         return errdata(err);
+//     }
+// }
+
+exports.getRecordListForType = async (reqBody) => {
+    try{
+        let typeList = await commonType.find({});
+        let userPv = [];
+        let typeArr = []
+        const time = getDate(15);
+        for(let i=0;i<typeList.length;i++){
+            let result = await findRecords(time, {'typecode': typeList[i].typeValue, 'user': reqBody.user||'131626'});
+            userPv = userPv.concat(result);
+            // userPv.push({type: typeList[i], operas: result});
+        }
+		return resdata('0000', 'success', {
+			record: userPv
+		});
+    }catch(err){
+        console.log(err);
+        return errdata(err);
+    }
+}
+
 exports.docreate = async (reqBody) => {
     let user = reqBody.user;
     try {

@@ -164,8 +164,7 @@ exports.getRecordListForType = async (reqBody) => {
     try{
         let typeList = await commonType.find({});
         let userPv = [];
-        let typeArr = []
-        const time = getDate(15);
+        const time = getDate(reqBody.dateNum||7);
         for(let i=0;i<typeList.length;i++){
             let result = await findRecords(time, {'typecode': typeList[i].typeValue, 'user': reqBody.user||'131626'});
             userPv = userPv.concat(result);

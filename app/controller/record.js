@@ -1,6 +1,7 @@
 import {record} from '../modal/record'
 import {resdata, errdata} from '../../utils/serve'
 import {commonType} from '../modal/commonType'
+import {babyUser} from '../modal/babyUser'
 import moment from 'moment';
 
 const logUtil = require('../../utils/logUtil');
@@ -191,6 +192,14 @@ exports.docreate = async (reqBody) => {
                 time: reqBody.records[i].time,
                 timeStr: reqBody.records[i].timeStr,
                 actTimeStr: reqBody.records[i].actTimeStr
+            }
+            if(reqBody.records[i].type.value=='身高'){
+                let dataArr = {height: reqBody.records[i].content}
+                let upUser = await babyUser.update({phone: user}, dataArr);
+            }
+            if(reqBody.records[i].type.value=='体重'){
+                let dataArr = {weight: reqBody.records[i].content}
+                let upUser = await babyUser.update({phone: user}, dataArr);
             }
             let newUser = await record.create(dataObg);
             console.log('newUser', newUser);

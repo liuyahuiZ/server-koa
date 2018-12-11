@@ -49,6 +49,36 @@ exports.register = async (reqBody) => {
         return errdata(err);
     }
 }
+exports.updateUser = async (reqBody) => {
+    let dataArr = {
+        username: reqBody.username,
+        userid: reqBody.userid,
+        birthday: reqBody.birthday,
+        height: reqBody.height,
+        weight: reqBody.weight,
+        remark: reqBody.remark,
+        sex: reqBody.sex,
+        phone: reqBody.phone,
+        imgUrl: reqBody.imgUrl
+    }
+    try {
+        let list = await babyUser.find({_id: reqBody.id});
+        let respon = {};
+        if(list && list.length > 0) {
+            let newUser = await babyUser.update({_id: reqBody.id}, dataArr);
+            console.log(newUser);
+            respon = resdata('0000', 'update success', newUser);
+        }else {
+            
+            respon = resdata('9999', 'the user is not exicet');
+        }
+        return respon;
+    } catch (err) {
+        console.log(err)
+        throw new Error(err);
+        return errdata(err);
+    }
+}
 exports.removeUser = async (reqBody) => {
     let dataArr = {
         id: reqBody.id,

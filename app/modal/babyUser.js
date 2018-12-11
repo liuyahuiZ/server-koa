@@ -61,10 +61,26 @@ class BabyUser{
                 phone: dataArr.phone,
                 emial: dataArr.emial,
                 remark: dataArr.remark,
-                imgUrl: dataArr.imgUrl
+                imgUrl: dataArr.imgUrl,
+                sex: dataArr.sex,
+                height: dataArr.height,
+                weight: dataArr.weight,
+                birthday: dataArr.birthday,
             });
             user.save(function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
+                if(e){
+                    reject(e);
+                }else{
+                    resolve(data);
+                }
+            });
+        })
+    }
+    update(option={}, dataArr={}){
+        const self = this;
+        return new Promise(function (resolve, reject){
+            self.babyUser.update(option, dataArr,function(e, data) {
                 if(e){
                     reject(e);
                 }else{

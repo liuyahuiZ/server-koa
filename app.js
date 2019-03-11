@@ -30,11 +30,11 @@ app.use(convert(require('koa-static')(__dirname + '/public')));
 app.use(convert(loggers()));
 // app.use(convert(test1()));
 // app.use(convert(test2()));
-app.use(views(__dirname + '/views', {extension: 'jade'}));
+// app.use(views(__dirname + '/views', {extension: 'jade'}));
 
-// app.use(views(__dirname + '/views-ejs', {
-//   extension: 'ejs'
-// }));
+app.use(views(__dirname + '/views-ejs', {
+  extension: 'ejs'
+}));
 
 // use route
 app.use(router.routes(), router.allowedMethods());

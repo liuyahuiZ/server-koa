@@ -10,7 +10,7 @@ exports.articleList = async (reqBody) => {
     }
     let currentPage = parseInt(reqBody.currentPage) || 1;
     let pageSize = parseInt(reqBody.pageSize)||10;
-    let startNum =  (currentPage-1) * pageSize; 
+    let startNum =  (currentPage-1) * pageSize;
     
     let skip = {skip:startNum,limit:pageSize,sort:{"createTime":-1}};
     try {

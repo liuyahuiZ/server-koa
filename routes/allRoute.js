@@ -10,9 +10,12 @@ const article = require('./article');
 const spider = require('./spider');
 const record = require('./record');
 const commonType = require('./commonType');
+const api = require('./api');
+const ssr = require('./ssr');
 
 
 router.use('/', index.routes(), index.allowedMethods());
+router.use('/ssr', ssr.routes(), ssr.allowedMethods());
 router.use('/users', users.routes(), users.allowedMethods());
 router.use('/files', files.routes(), files.allowedMethods());
 router.use('/collect', collect.routes(), collect.allowedMethods());
@@ -23,5 +26,6 @@ router.use('/article', article.routes(), article.allowedMethods());
 router.use('/spider', spider.routes(), spider.allowedMethods());
 router.use('/record', record.routes(), record.allowedMethods());
 router.use('/commonType', commonType.routes(), commonType.allowedMethods());
+router.use('/api', api.routes(), api.allowedMethods());
 
 module.exports = router;

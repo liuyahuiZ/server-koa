@@ -11,8 +11,9 @@ const spider = require('./spider');
 const record = require('./record');
 const commonType = require('./commonType');
 const api = require('./api');
-const ssr = require('./ssr');
-
+const capi = require('./capi');
+const mail = require('./sendMails');
+const ssr = require('./ssr'); //引入的顺序会报bug
 
 router.use('/', index.routes(), index.allowedMethods());
 router.use('/ssr', ssr.routes(), ssr.allowedMethods());
@@ -27,5 +28,7 @@ router.use('/spider', spider.routes(), spider.allowedMethods());
 router.use('/record', record.routes(), record.allowedMethods());
 router.use('/commonType', commonType.routes(), commonType.allowedMethods());
 router.use('/api', api.routes(), api.allowedMethods());
+router.use('/capi', capi.routes(), capi.allowedMethods());
+router.use('/mail', mail.routes(), mail.allowedMethods());
 
 module.exports = router;

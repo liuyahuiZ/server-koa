@@ -8,6 +8,7 @@
     "test": "./node_modules/.bin/mocha -u bdd"
   },
   "dependencies": {
+    "babel": "^6.23.0",
     "cheerio": "^1.0.0-rc.2",
     "co": "^4.6.0",
     "crypto-js": "^3.1.9-1",
@@ -29,7 +30,6 @@
     "lodash": "^4.17.4",
     "log4js": "^2.3.3",
     "mongoose": "^4.11.6",
-    "node-jsx": "^0.13.3",
     "qiniu": "^7.2.1",
     "qr-image": "^3.2.0",
     "react": "^16.8.4",
@@ -42,7 +42,10 @@
   "devDependencies": {
     "mocha": "^2.4.5",
     "moment": "^2.22.2",
-    "nodemon": "^1.9.1",
+    "node-jsx": "^0.13.3",
+    "nodemailer": "^6.2.1",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "nodemon": "^1.19.1",
     "should": "^8.3.0",
     "supertest": "^1.2.0"
   }

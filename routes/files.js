@@ -7,6 +7,12 @@ router.get('/', async (ctx, next) => {
     ctx.res.writeHead(200, {'Content-Type': 'image/png'});
     // ctx.res.end();
 });
+
+router.get('/getFile', async (ctx, next) => {
+    console.log(ctx.query.path);
+    let list = await getImage(ctx.query.path)
+    ctx.body = list;
+});
 router.post('/qrImage', async (ctx, next) => {
     console.log(ctx.request.body);
     let reqBody = ctx.request.body;

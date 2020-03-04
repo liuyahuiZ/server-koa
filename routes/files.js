@@ -41,11 +41,11 @@ router.post('/ImageDetail', async (ctx, next) => {
     ctx.body = list;
 });
 router.post('/fileUp', async (ctx, next) => {
-    console.log(ctx.request.body.fields.userid)
-    // console.log(ctx.request.body.files);
+    // console.log(ctx.request.body.fields.userid)
+    console.log(ctx.request.body);
     const file = ctx.request.body.files.file;
-    const userid = ctx.request.body.fields.userid;
-    ctx.body = await fileUp(file, userid);
+    // const userid = ctx.request.body.fields.userid;
+    ctx.body = await fileUp(file);
 });
 router.post('/fileList', async (ctx, next) => {
     let reqBody = ctx.request.body;

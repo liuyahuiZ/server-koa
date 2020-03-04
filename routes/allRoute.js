@@ -12,7 +12,9 @@ const record = require('./record');
 const commonType = require('./commonType');
 const api = require('./api');
 const capi = require('./capi');
+const pte = require('./pte');
 const mail = require('./sendMails');
+const actions = require('./actions');
 const ssr = require('./ssr'); //引入的顺序会报bug
 
 router.use('/', index.routes(), index.allowedMethods());
@@ -30,5 +32,7 @@ router.use('/commonType', commonType.routes(), commonType.allowedMethods());
 router.use('/api', api.routes(), api.allowedMethods());
 router.use('/capi', capi.routes(), capi.allowedMethods());
 router.use('/mail', mail.routes(), mail.allowedMethods());
+router.use('/pte', pte.routes(), pte.allowedMethods());
+router.use('/actions', actions.routes(), actions.allowedMethods());
 
 module.exports = router;

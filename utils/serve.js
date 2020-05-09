@@ -7,7 +7,10 @@ exports.resdata=function (code, msg, data) {
 			'code': _code,
 			'message': _msg
 		},
-		'respBody':data
+		'code': _code,
+		'message': _msg,
+		'msg':_msg,
+		'data':data
 	}
 	return respon;
 };
@@ -19,7 +22,11 @@ exports.errdata=function (err, code, msg) {
 		'respHead':{
 			'code': _code,
             'message': _msg,
-        },
+		},
+		'code': _code,
+		'message': _msg,
+		'data':data,
+		'msg':_msg,
         'respBody':{
             'err': err
         }

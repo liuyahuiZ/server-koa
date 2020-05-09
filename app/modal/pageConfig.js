@@ -1,47 +1,53 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-let UserSchema = new Schema({
-	userid:String,
-    username:String,
-    sex: String,
-    height: String,
-    weight: String,
-    birthday: String,
-	phone:String,
-	password: String,
-    personfile:Object,
-    imgUrl: Object,
-    email:String,
-    type:Object,
-	typecode:String,
-    remark:String,
-	createTime:{
+let PageConfigSchema = new Schema({
+	name: String,
+    pageId: String,
+    channelId: String,
+    configJson: String,
+    configVersion: String,
+    status:{
+        type: Number,
+        dafault: 0
+    },
+    isDelete:{
+        type: Number,
+        dafault: 0
+    },
+    createUserId: String,
+    updateUserId:  String,
+    id: {
         type: Date,
         dafault: Date.now()
     },
-	updateTime:{
+	createTime: {
+        type: Date,
+        dafault: Date.now()
+    },
+	updateTime: {
         type: Date,
         dafault: Date.now()
     },
 })
 
-UserSchema.pre('save', function(next) {
+PageConfigSchema.pre('save', function(next) {
     if (this.isNew) {
       this.createTime = this.updateTime = Date.now()
+      this.id = Date.now();
     }
     else {
       this.updateTime = Date.now()
     }
     next()
 })
-class User{
+class PageConfig{
     constructor() {
-          this.users = mongoose.model("user", UserSchema);
+          this.pageConfig = mongoose.model("pageConfig", PageConfigSchema);
     }
-    find(dataArr={}) {
+    find(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.users.find(dataArr, function(e, docs) {
+            self.pageConfig.find(dataArr,null,skip, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);
@@ -54,7 +60,7 @@ class User{
     findOne(dataArr={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.if.findOne(dataArr,null,null, function(e, docs) {
+            self.pageConfig.findOne(dataArr,null,null, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);
@@ -64,18 +70,10 @@ class User{
             })
         })
     }
-    create(dataArr) {
+    create(dataArr={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            let user = new self.users({
-				userid: dataArr.userid,
-                username: dataArr.username,
-                password: dataArr.password,
-                phone: dataArr.phone,
-                emial: dataArr.emial,
-                remark: dataArr.remark,
-                imgUrl: dataArr.imgUrl
-            });
+            let user = new self.pageConfig(dataArr);
             user.save(function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
                 if(e){
@@ -86,10 +84,22 @@ class User{
             });
         })
     }
-    delete(dataArr) {
+    update(option={}, dataArr={}){
         const self = this;
         return new Promise(function (resolve, reject){
-            self.users.remove({
+            self.pageConfig.update(option, dataArr,function(e, data) {
+                if(e){
+                    reject(e);
+                }else{
+                    resolve(data);
+                }
+            });
+        })
+    }
+    delete(dataArr={}) {
+        const self = this;
+        return new Promise(function (resolve, reject){
+            self.pageConfig.remove({
                 _id: dataArr.id
             }, function(e, data) {
                 if(e){
@@ -102,5 +112,5 @@ class User{
     }
 }
 
-let user=new User()
-export {user}
+let pageConfig = new PageConfig()
+export {pageConfig}

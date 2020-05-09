@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import { articleList, articleDetail, createArticle, updateArticle, mkCommit, removeArticle} from '../app/controller/article'
+import { articleList, articleDetail, createArticle, updateArticle, mkCommit, removeArticle, getArticleDetail} from '../app/controller/article'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a article response!';
@@ -8,7 +8,7 @@ router.get('/', function (ctx, next) {
 router.post('/getArticle', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
-  ctx.body = await articleList(reqBody);
+  ctx.body = await articleList(reqBody.data);
 });
 
 router.get('/articleDetail', async (ctx, next) => {
@@ -16,16 +16,22 @@ router.get('/articleDetail', async (ctx, next) => {
   ctx.body = await articleDetail(id, next);
 });
 
+router.post('/articleDetail', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log(reqBody);
+  ctx.body = await getArticleDetail(reqBody.data);
+});
+
 router.post('/createArctile', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
-  ctx.body = await createArticle(reqBody);
+  ctx.body = await createArticle(reqBody.data);
 });
 
 router.post('/updateArctile', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
-  ctx.body = await updateArticle(reqBody);
+  ctx.body = await updateArticle(reqBody.data);
 });
 
 
@@ -38,7 +44,7 @@ router.post('/mkCommit', async (ctx, next) => {
 router.post('/removeArticle', async (ctx, next) => {
   console.log(ctx.request.body);
   let reqBody = ctx.request.body;
-  ctx.body = await removeArticle(reqBody);
+  ctx.body = await removeArticle(reqBody.data);
 });
 
 router.get('/removeArticle', async (ctx, next) => {

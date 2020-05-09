@@ -103,7 +103,7 @@ exports.fileUp = async (file, userid) => {
     try {
         let newFile = await files.create(dataArr);
         console.log(newFile);
-        return resdata('0000', 'success', newFile);;
+        return resdata('0000', 'success', `${newFile.filePath}/${newFile.fileName}`);;
     } catch (err) {
         console.log(err)
         throw new Error(err);

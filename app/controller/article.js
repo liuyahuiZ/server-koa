@@ -8,7 +8,7 @@ const logUtil = require('../../utils/logUtil');
 exports.articleList = async (reqBody) => {
     let dataArr = {
     }
-    let currentPage = parseInt(reqBody.currentPage) || 1;
+    let currentPage = parseInt(reqBody.current) || 1;
     let pageSize = parseInt(reqBody.pageSize)||10;
     let startNum =  (currentPage-1) * pageSize;
     
@@ -21,13 +21,16 @@ exports.articleList = async (reqBody) => {
         }
         // console.log(allList, allList.length);
         let pageInfo = {
-            allPage: allPages,
-            allCount: allList.length,
+            pages: allPages,
+            total: allList.length,
             currentPage: currentPage,
             pageSize: pageSize,
+            allCount: allList.length,
+            allPage: allPages,
+            pageNumber: currentPage
         }
         if(currentPage>allPages) {
-            return resdata('0000', 'no more', {pageInfo: pageInfo});
+            return resdata('0000', 'no more', {list: [], pageInfo: pageInfo});
         }
         let list = await article.find(dataArr, skip);
         return resdata('0000', 'success', {pageInfo: pageInfo, list: list});
@@ -48,6 +51,16 @@ exports.articleDetail = async (reqBody) => {
             sea: newSea
         }
         let upResult = await article.update({_id: reqBody.id}, upData);
+        return resdata('0000', 'success', list);
+    } catch (err) {
+        return errdata(err);
+    }
+}
+
+exports.getArticleDetail = async (reqBody) => {
+    // console.log(reqBody.id);
+    try {
+        let list = await article.find({_id: reqBody.id});
         return resdata('0000', 'success', list);
     } catch (err) {
         return errdata(err);
@@ -131,15 +144,15 @@ exports.mkCommit = async (reqBody) => {
     }
 }
 
-exports.removeArticle = async (id) => {
+exports.removeArticle = async (reqBody) => {
     let dataArr = {
-        id: id,
+        id: reqBody._id,
     }
     try {
-        let list = await article.find({_id: id});
+        let list = await article.find({_id: reqBody._id});
         let respon = {};
         if(list && list.length > 0) {
-            let list = await article.delete(dataArr);
+            let list = await article.delete({id: reqBody._id});
             respon = resdata('0000', 'success', list);
         }else {
             respon = resdata('0000', 'the id is not exicet', list);

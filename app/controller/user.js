@@ -20,6 +20,56 @@ exports.findUser = async (reqBody) => {
         return errdata(err);
     }
 }
+
+exports.userLogin = async (reqBody) => {
+    try {
+        let list = await babyUser.find({username: reqBody.username});
+        let respon = {}
+        if(list && list.length > 0) {
+            respon = resdata('0000', 'update success', list);
+        }else {
+            respon = resdata('9999', 'the user is not exicet');
+        }
+        return respon;
+    } catch (err) {
+        return errdata(err);
+    }
+}
+
+exports.userList = async (reqBody) => {
+    let dataArr = {
+    }
+    let currentPage = parseInt(reqBody.current) || 1;
+    let pageSize = parseInt(reqBody.size)||10;
+    let startNum =  (currentPage-1) * pageSize;
+    
+    let skip = {skip:startNum,limit:pageSize,sort:{"createTime":-1}};
+    try {
+        let allList = await babyUser.find(dataArr);
+        let allPages = allList.length/pageSize;
+        if(allPages>parseInt(allPages)){
+            allPages=parseInt(allPages)+1
+        }
+        // console.log(allList, allList.length);
+        let pageInfo = {
+            pages: allPages,
+            total: allList.length,
+            currentPage: currentPage,
+            pageSize: pageSize,
+            allCount: allList.length,
+            allPage: allPages,
+            pageNumber: currentPage
+        }
+        if(currentPage>allPages) {
+            return resdata('0000', 'no more', { pageInfo:pageInfo, records:[]});
+        }
+        let list = await babyUser.find(dataArr, skip);
+        return resdata('0000', 'success', { pageInfo:pageInfo, records: list});
+    } catch (err) {
+        return errdata(err);
+    }
+}
+
 exports.register = async (reqBody) => {
     let dataArr = {
         username: reqBody.username,
@@ -81,10 +131,12 @@ exports.updateUser = async (reqBody) => {
 }
 exports.removeUser = async (reqBody) => {
     let dataArr = {
-        id: reqBody.id,
+        id: reqBody._id,
     }
     try {
-        let list = await babyUser.find({username: reqBody.uname});
+        let list = await babyUser.find({
+            _id: reqBody._id,
+        });
         let respon = {}
         if(list && list.length > 0) {
             let list = await babyUser.delete(dataArr);

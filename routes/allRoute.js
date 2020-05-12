@@ -18,10 +18,10 @@ const actions = require('./actions');
 const project = require('./project');
 const pages = require('./pages');
 const pagesConfig = require('./pagesConfig');
-const ssr = require('./ssr'); //引入的顺序会报bug
+// const ssr = require('./ssr'); //引入的顺序会报bug
 
 router.use('/', index.routes(), index.allowedMethods());
-router.use('/ssr', ssr.routes(), ssr.allowedMethods());
+// router.use('/ssr', ssr.routes(), ssr.allowedMethods());
 router.use('/users', users.routes(), users.allowedMethods());
 router.use('/files', files.routes(), files.allowedMethods());
 router.use('/collect', collect.routes(), collect.allowedMethods());

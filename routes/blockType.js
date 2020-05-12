@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import { findType, findTheType,  addType, removeType, typeList, updateType } from '../app/controller/commonType'
+import { findType, findTheType,  addType, removeType, typeList, updateType } from '../app/controller/blockType'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a article response!';

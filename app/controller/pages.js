@@ -28,11 +28,11 @@ exports.pageList = async (reqBody) => {
             currentPage: currentPage,
             pageSize: pageSize,
         }
-        console.log('dataArr', dataArr)
+        // console.log('dataArr', dataArr)
         if(currentPage>allPages) {
             return resdata('0000', 'no more', {pageInfo: pageInfo});
         }
-                console.log('dataArr', dataArr)
+                // console.log('dataArr', dataArr)
         let list = await pages.find(dataArr, skip);
         return resdata('0000', 'success', list);
     } catch (err) {

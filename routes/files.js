@@ -28,12 +28,12 @@ router.get('/getImage', async (ctx, next) => {
     }
 });
 router.get('/getTheImage', async (ctx, next) => {
-    console.log(ctx.query.path);
+    console.log('path', ctx.query.path);
     let list = await getImage(ctx.query.path)
     ctx.body = list;
-    if(!list.code) {
-        ctx.res.writeHead(200, {'Content-Type': 'image/png'});
-    }
+    // if(!list.code) {
+    //     ctx.res.writeHead(200, {'Content-Type': 'image/png'});
+    // }
 });
 router.post('/ImageDetail', async (ctx, next) => {
     let reqBody = ctx.request.body;

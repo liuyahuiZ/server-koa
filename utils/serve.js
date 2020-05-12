@@ -25,7 +25,7 @@ exports.errdata=function (err, code, msg) {
 		},
 		'code': _code,
 		'message': _msg,
-		'data':data,
+		'data':err,
 		'msg':_msg,
         'respBody':{
             'err': err

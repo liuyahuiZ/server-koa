@@ -1,8 +1,9 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-let CommonTypeSchema = new Schema({
+let BlockTypeSchema = new Schema({
     typeKey: String,
     typeValue: String,
+    imgGroup:Object,
     remark: String,
     user: String,
 	createTime: {
@@ -15,7 +16,7 @@ let CommonTypeSchema = new Schema({
     },
 })
 
-CommonTypeSchema.pre('save', function(next) {
+BlockTypeSchema.pre('save', function(next) {
     if (this.isNew) {
       this.createTime = this.updateTime = Date.now()
     }
@@ -24,14 +25,14 @@ CommonTypeSchema.pre('save', function(next) {
     }
     next()
 })
-class CommonType{
+class BlockType{
     constructor() {
-          this.commonType = mongoose.model("commonType", CommonTypeSchema);
+          this.blockType = mongoose.model("blockType", BlockTypeSchema);
     }
     find(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.commonType.find(dataArr,null,skip, function(e, docs) {
+            self.blockType.find(dataArr,null,skip, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);
@@ -44,7 +45,7 @@ class CommonType{
     count(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.commonType.where(dataArr,null,skip).count( function(e, docs) {
+            self.blockType.where(dataArr,null,skip).count( function(e, docs) {
                 if(e){
                     reject(e);
                 }else{
@@ -56,9 +57,10 @@ class CommonType{
     create(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            let user = new self.commonType({
+            let user = new self.blockType({
                 typeKey: dataArr.typeKey,
                 typeValue: dataArr.typeValue,
+                imgGroup: dataArr.imgGroup,
                 remark: dataArr.remark,
                 user: dataArr.user,
             });
@@ -75,7 +77,7 @@ class CommonType{
     update(option={}, dataArr={}){
         const self = this;
         return new Promise(function (resolve, reject){
-            self.commonType.update(option, dataArr,function(e, data, numberAffected) {
+            self.blockType.update(option, dataArr,function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
                 if(e){
                     reject(e);
@@ -88,7 +90,7 @@ class CommonType{
     delete(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.commonType.remove({
+            self.blockType.remove({
                 _id: dataArr.id
             }, function(e, data) {
                 if(e){
@@ -101,5 +103,5 @@ class CommonType{
     }
 }
 
-let commonType = new CommonType()
-export {commonType}
+let blockType = new BlockType()
+export {blockType}

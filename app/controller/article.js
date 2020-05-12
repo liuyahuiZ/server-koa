@@ -1,12 +1,17 @@
 import {article} from '../modal/article'
 import {comment} from '../modal/comment'
+import {blockType} from '../modal/blockType'
 import {resdata, errdata} from '../../utils/serve'
 
 const logUtil = require('../../utils/logUtil');
 
 
 exports.articleList = async (reqBody) => {
-    let dataArr = {
+    let dataArr = reqBody.searchObg || {
+    }
+    if(reqBody.keyWord) {
+        dataArr['title']=new RegExp(reqBody.keyWord);//模糊查询参数
+        dataArr['content']=new RegExp(reqBody.keyWord);
     }
     let currentPage = parseInt(reqBody.current) || 1;
     let pageSize = parseInt(reqBody.pageSize)||10;
@@ -35,6 +40,31 @@ exports.articleList = async (reqBody) => {
         let list = await article.find(dataArr, skip);
         return resdata('0000', 'success', {pageInfo: pageInfo, list: list});
     } catch (err) {
+        return errdata(err);
+    }
+}
+
+exports.typeArticleList = async (reqBody, next) => {
+    try {
+        let list = await blockType.find({}, {});
+        let newList = []
+        for(let i=0; i<list.length; i++){
+          let dataArr = {
+            type: list[i].typeValue,
+          }
+        let currentPage = 1;
+        let pageSize = 5;
+        let startNum =  (currentPage-1) * pageSize;
+        
+        let skip = {skip:startNum,limit:pageSize,sort:{"createTime":-1}};
+        let articleList = await article.find(dataArr, skip);
+        //   newList[i] = list[i];
+          newList.push({ info: list[i],
+            articleList: articleList});
+        }
+        return resdata('0000', 'success', newList);
+    } catch (err) {
+        console.log('err',err)
         return errdata(err);
     }
 }
@@ -104,11 +134,11 @@ exports.updateArticle = async (reqBody) => {
         let list = await article.find({_id: reqBody.id});
         let respon = {};
         if(list && list.length > 0) {
-            respon = resdata('0013', 'the article is not fond');
-        }else {
             let updateUser = await article.update({_id: reqBody.id}, dataArr);
             console.log(updateUser);
             respon = resdata('0000', 'success', updateUser);
+        }else {
+            respon = resdata('0013', 'the article is not fond');
         }
         return respon;
     } catch (err) {

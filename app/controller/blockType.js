@@ -1,10 +1,10 @@
 import {resdata, errdata} from '../../utils/serve';
-import {commonType} from '../modal/commonType'
+import {blockType} from '../modal/blockType'
 
 exports.findType = async (reqBody) => {
     try {
         let data = reqBody.data||{};
-        let list = await commonType.find(data);
+        let list = await blockType.find(data);
         return resdata('0000', 'success', list);
     } catch (err) {
         return errdata(err);
@@ -17,7 +17,7 @@ exports.findTheType = async (reqBody) => {
         let where = {
             _id: data._id
         }
-        let result = await commonType.find(where);
+        let result = await blockType.find(where);
         return resdata('0000', 'success', result[0]);
     } catch (err) {
         return errdata(err);
@@ -45,11 +45,11 @@ exports.typeList = async (reqBody) => {
         sec = Object.assign({}, sec);
         console.log('sec:', sec)
 
-        const AllCount = await commonType.count(sec);
+        const AllCount = await blockType.count(sec);
 		console.log('count:', AllCount);
         const where = {skip: (pageNumber - 1) * pageSize, limit:pageSize}
         console.log('where:', where);
-        let list = await commonType.find(sec, where);
+        let list = await blockType.find(sec, where);
         console.log('list:', list);
 		return resdata('0000', 'success', {
 			pageInfo: {
@@ -71,10 +71,11 @@ exports.typeList = async (reqBody) => {
 exports.addType = async (reqBody) => {
     let data = reqBody.data || {};
     try {
-        let list = await commonType.find({typeKey: data.typeKey});
+        let list = await blockType.find({typeKey: data.typeKey});
         let dataReq = {
             typeKey: data.typeKey,
             typeValue: data.typeValue,
+            imgGroup: data.imgGroup,
             remark: data.remark,
             user: data.user
         }
@@ -82,7 +83,7 @@ exports.addType = async (reqBody) => {
         if(list && list.length > 0) {
             respon = resdata('0000', 'the type is exist', {});
         } else{
-            let result = await commonType.create(dataReq);
+            let result = await blockType.create(dataReq);
             respon = resdata('0000', 'create success', result);
         }
         return respon;
@@ -94,16 +95,17 @@ exports.addType = async (reqBody) => {
 exports.updateType = async (reqBody) => {
     let data = reqBody.data || {};
     try {
-        let list = await commonType.find({_id: data._id});
+        let list = await blockType.find({_id: data._id});
         let dataReq = {
             typeKey: data.typeKey,
             typeValue: data.typeValue,
+            imgGroup: data.imgGroup,
             remark: data.remark,
             user: data.user
         }
         let respon = {}
         if(list && list.length > 0) {
-            let result = await commonType.update({_id: data._id}, dataReq);
+            let result = await blockType.update({_id: data._id}, dataReq);
             respon = resdata('0000', 'create success', result);
         } else{
             respon = resdata('0000', 'the type is not exist', {});
@@ -117,7 +119,7 @@ exports.updateType = async (reqBody) => {
 exports.removeType = async (reqBody) => {
     if(!reqBody.id) return resdata('9999', 'id is required', {});
     try {
-        let list = await commonType.delete({id: reqBody.id});
+        let list = await blockType.delete({id: reqBody.id});
         return resdata('0000', 'success', list);
     } catch (err) {
         return errdata(err);

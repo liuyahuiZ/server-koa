@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import { articleList, articleDetail, createArticle, updateArticle, mkCommit, removeArticle, getArticleDetail} from '../app/controller/article'
+import { articleList, articleDetail, createArticle, updateArticle, mkCommit, removeArticle, getArticleDetail, typeArticleList} from '../app/controller/article'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a article response!';
@@ -9,6 +9,12 @@ router.post('/getArticle', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
   ctx.body = await articleList(reqBody.data);
+});
+
+router.post('/typeArticleList', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log(reqBody);
+  ctx.body = await typeArticleList(reqBody.data);
 });
 
 router.get('/articleDetail', async (ctx, next) => {

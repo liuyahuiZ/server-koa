@@ -31,13 +31,14 @@ exports.readFile =  async (id) => {
     }
 }
 exports.getImage =  async (imagePath) => {
+    console.log('imagePath', imagePath)
     try {
 	    let targetPath = './';
         let filePath = path.join(targetPath, imagePath);
         console.log(filePath);
         return fs.readFileSync(filePath);
     } catch (err) {
-        return errdata(err);
+        return errdata(null,'9999', err);
     }
 }
 exports.fileDetail =  async (id) => {

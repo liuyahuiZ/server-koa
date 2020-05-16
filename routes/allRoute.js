@@ -19,6 +19,7 @@ const actions = require('./actions');
 const project = require('./project');
 const pages = require('./pages');
 const accessLog = require('./accessLog');
+const messages = require('./messages');
 const pagesConfig = require('./pagesConfig');
 // const ssr = require('./ssr'); //引入的顺序会报bug
 
@@ -32,6 +33,7 @@ router.use('/wxpay', wxpay.routes(), wxpay.allowedMethods());
 router.use('/wxapp', wxapp.routes(), wxapp.allowedMethods());
 router.use('/article', article.routes(), article.allowedMethods());
 router.use('/accessLog', accessLog.routes(), accessLog.allowedMethods());
+router.use('/messages', messages.routes(), messages.allowedMethods());
 router.use('/spider', spider.routes(), spider.allowedMethods());
 router.use('/record', record.routes(), record.allowedMethods());
 router.use('/commonType', commonType.routes(), commonType.allowedMethods());

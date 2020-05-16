@@ -1,15 +1,11 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-let ArticleSchema = new Schema({
-    user:String,
-	title: String,
-    info:String,
-	content:String,
- 	type:Object,
-	typecode:String,
+let BannerSchema = new Schema({
+    bannerName: String,
+    code: String,
     imgGroup:Object,
-	comment:Object,
-	sea:Number,
+    remark: String,
+    user: String,
 	createTime: {
         type: Date,
         dafault: Date.now()
@@ -20,7 +16,7 @@ let ArticleSchema = new Schema({
     },
 })
 
-ArticleSchema.pre('save', function(next) {
+BannerSchema.pre('save', function(next) {
     if (this.isNew) {
       this.createTime = this.updateTime = Date.now()
     }
@@ -29,14 +25,14 @@ ArticleSchema.pre('save', function(next) {
     }
     next()
 })
-class Article{
+class Banner{
     constructor() {
-          this.article = mongoose.model("article", ArticleSchema);
+          this.banner = mongoose.model("banner", BannerSchema);
     }
-    find(dataArr={}, skip={}, limit=null) {
+    find(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.article.find(dataArr,limit,skip, function(e, docs) {
+            self.banner.find(dataArr,null,skip, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);
@@ -46,19 +42,27 @@ class Article{
             })
         })
     }
-    create(dataArr={}) {
+    count(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            let user = new self.article({
-                user: dataArr.user,
-                title: dataArr.title,
-                info: dataArr.info,
-                content: dataArr.content,
-                type: dataArr.type,
-                typecode: dataArr.typecode,
+            self.banner.where(dataArr,null,skip).count( function(e, docs) {
+                if(e){
+                    reject(e);
+                }else{
+                    resolve(docs);
+                }
+            })
+        })
+    }
+    create(dataArr) {
+        const self = this;
+        return new Promise(function (resolve, reject){
+            let user = new self.banner({
+                bannerName: dataArr.bannerName,
+                code: dataArr.code,
                 imgGroup: dataArr.imgGroup,
-                comment: dataArr.comment,
-                sea: 0,
+                remark: dataArr.remark,
+                user: dataArr.user,
             });
             user.save(function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
@@ -73,7 +77,8 @@ class Article{
     update(option={}, dataArr={}){
         const self = this;
         return new Promise(function (resolve, reject){
-            self.article.update(option, dataArr,function(e, data) {
+            self.banner.update(option, dataArr,function(e, data, numberAffected) {
+                // if (e) response.send(e.message);
                 if(e){
                     reject(e);
                 }else{
@@ -82,10 +87,10 @@ class Article{
             });
         })
     }
-    delete(dataArr={}) {
+    delete(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.article.remove({
+            self.banner.remove({
                 _id: dataArr.id
             }, function(e, data) {
                 if(e){
@@ -98,5 +103,5 @@ class Article{
     }
 }
 
-let article = new Article()
-export {article}
+let banner = new Banner()
+export {banner}

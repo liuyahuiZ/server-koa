@@ -11,12 +11,14 @@ const spider = require('./spider');
 const record = require('./record');
 const commonType = require('./commonType');
 const blockType = require('./blockType');
+const banner = require('./banner');
 const api = require('./api');
 const capi = require('./capi');
 const mail = require('./sendMails');
 const actions = require('./actions');
 const project = require('./project');
 const pages = require('./pages');
+const accessLog = require('./accessLog');
 const pagesConfig = require('./pagesConfig');
 // const ssr = require('./ssr'); //引入的顺序会报bug
 
@@ -29,10 +31,12 @@ router.use('/wx', wx.routes(), wx.allowedMethods());
 router.use('/wxpay', wxpay.routes(), wxpay.allowedMethods());
 router.use('/wxapp', wxapp.routes(), wxapp.allowedMethods());
 router.use('/article', article.routes(), article.allowedMethods());
+router.use('/accessLog', accessLog.routes(), accessLog.allowedMethods());
 router.use('/spider', spider.routes(), spider.allowedMethods());
 router.use('/record', record.routes(), record.allowedMethods());
 router.use('/commonType', commonType.routes(), commonType.allowedMethods());
 router.use('/blockType', blockType.routes(), blockType.allowedMethods());
+router.use('/banner', banner.routes(), banner.allowedMethods());
 router.use('/api', api.routes(), api.allowedMethods());
 router.use('/capi', capi.routes(), capi.allowedMethods());
 router.use('/mail', mail.routes(), mail.allowedMethods());

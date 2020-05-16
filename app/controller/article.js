@@ -37,7 +37,7 @@ exports.articleList = async (reqBody) => {
         if(currentPage>allPages) {
             return resdata('0000', 'no more', {list: [], pageInfo: pageInfo});
         }
-        let list = await article.find(dataArr, skip);
+        let list = await article.find(dataArr, skip, '-content');
         return resdata('0000', 'success', {pageInfo: pageInfo, list: list});
     } catch (err) {
         return errdata(err);
@@ -53,11 +53,11 @@ exports.typeArticleList = async (reqBody, next) => {
             type: list[i].typeValue,
           }
         let currentPage = 1;
-        let pageSize = 5;
+        let pageSize = 3;
         let startNum =  (currentPage-1) * pageSize;
         
         let skip = {skip:startNum,limit:pageSize,sort:{"createTime":-1}};
-        let articleList = await article.find(dataArr, skip);
+        let articleList = await article.find(dataArr, skip, '-content');
         //   newList[i] = list[i];
           newList.push({ info: list[i],
             articleList: articleList});

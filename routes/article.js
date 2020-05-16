@@ -17,9 +17,9 @@ router.post('/typeArticleList', async (ctx, next) => {
   ctx.body = await typeArticleList(reqBody.data);
 });
 
-router.get('/articleDetail', async (ctx, next) => {
-  let id = ctx.query;
-  ctx.body = await articleDetail(id, next);
+router.post('/articleDetail', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  ctx.body = await articleDetail(reqBody.data);
 });
 
 router.post('/articleDetail', async (ctx, next) => {

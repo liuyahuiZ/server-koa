@@ -1,15 +1,10 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-let ArticleSchema = new Schema({
-    user:String,
-	title: String,
-    info:String,
-	content:String,
- 	type:Object,
-	typecode:String,
-    imgGroup:Object,
-	comment:Object,
-	sea:Number,
+let AccessLogSchema = new Schema({
+    client: String,
+    info: String,
+    remark: String,
+    user: String,
 	createTime: {
         type: Date,
         dafault: Date.now()
@@ -20,7 +15,7 @@ let ArticleSchema = new Schema({
     },
 })
 
-ArticleSchema.pre('save', function(next) {
+AccessLogSchema.pre('save', function(next) {
     if (this.isNew) {
       this.createTime = this.updateTime = Date.now()
     }
@@ -29,14 +24,14 @@ ArticleSchema.pre('save', function(next) {
     }
     next()
 })
-class Article{
+class AccessLog{
     constructor() {
-          this.article = mongoose.model("article", ArticleSchema);
+          this.accessLog = mongoose.model("accessLog", AccessLogSchema);
     }
-    find(dataArr={}, skip={}, limit=null) {
+    find(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.article.find(dataArr,limit,skip, function(e, docs) {
+            self.accessLog.find(dataArr,null,skip, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);
@@ -46,19 +41,26 @@ class Article{
             })
         })
     }
-    create(dataArr={}) {
+    count(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            let user = new self.article({
-                user: dataArr.user,
-                title: dataArr.title,
+            self.accessLog.where(dataArr,null,skip).count( function(e, docs) {
+                if(e){
+                    reject(e);
+                }else{
+                    resolve(docs);
+                }
+            })
+        })
+    }
+    create(dataArr) {
+        const self = this;
+        return new Promise(function (resolve, reject){
+            let user = new self.accessLog({
+                client: dataArr.client,
                 info: dataArr.info,
-                content: dataArr.content,
-                type: dataArr.type,
-                typecode: dataArr.typecode,
-                imgGroup: dataArr.imgGroup,
-                comment: dataArr.comment,
-                sea: 0,
+                remark: dataArr.remark,
+                user: dataArr.user,
             });
             user.save(function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
@@ -73,7 +75,8 @@ class Article{
     update(option={}, dataArr={}){
         const self = this;
         return new Promise(function (resolve, reject){
-            self.article.update(option, dataArr,function(e, data) {
+            self.accessLog.update(option, dataArr,function(e, data, numberAffected) {
+                // if (e) response.send(e.message);
                 if(e){
                     reject(e);
                 }else{
@@ -82,10 +85,10 @@ class Article{
             });
         })
     }
-    delete(dataArr={}) {
+    delete(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.article.remove({
+            self.accessLog.remove({
                 _id: dataArr.id
             }, function(e, data) {
                 if(e){
@@ -98,5 +101,5 @@ class Article{
     }
 }
 
-let article = new Article()
-export {article}
+let accessLog = new AccessLog()
+export {accessLog}

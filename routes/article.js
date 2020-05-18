@@ -22,7 +22,7 @@ router.post('/articleDetail', async (ctx, next) => {
   ctx.body = await articleDetail(reqBody.data);
 });
 
-router.post('/articleDetail', async (ctx, next) => {
+router.post('/articleDetails', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
   ctx.body = await getArticleDetail(reqBody.data);

@@ -113,15 +113,16 @@ exports.fileUp = async (file, userid) => {
 }
 exports.fileList = async (reqBody, next) => {
   console.log(reqBody);
-    let pageindex=(reqBody.pageNum-1)*reqBody.numPerPage;
-    if(reqBody.pageNum==1){
-      pageindex=0;//o biegin
-    }
-    let limit=parseInt(reqBody.numPerPage,10);
-    const where = {skip:pageindex,limit:limit,sort:{"createTime":-1}}
+
+    let currentPage = parseInt(reqBody.current) || 1;
+    let pageSize = parseInt(reqBody.pageSize)||10;
+    let startNum =  (currentPage-1) * pageSize;
+
+    let skip = {skip:startNum,limit:pageSize,sort:{"createTime":-1}};
+
     try {
-        let lists = await files.find();
-        let list = await files.find({},where);
+        let allList = await files.find();
+        let list = await files.find({},skip);
         for(let i=0; i<list.length; i++){
           let dataArr = {
               fileid: list[i]._id,
@@ -129,19 +130,24 @@ exports.fileList = async (reqBody, next) => {
           let collects = await collect.find(dataArr);
           list[i].collect=collects;
         }
-        let allpage=lists.length/reqBody.numPerPage
         // console.log('allpage',allpage,parseInt(allpage),data.reqBody.numPerPage)
-        if(allpage>parseInt(allpage, 10)){
-          allpage=parseInt(allpage, 10)+1
+        let allPages = allList.length/pageSize;
+        if(allPages>parseInt(allPages)){
+            allPages=parseInt(allPages)+1
+        }
+        // console.log(allList, allList.length);
+        let pageInfo = {
+            pages: allPages,
+            total: allList.length,
+            currentPage: currentPage,
+            pageSize: pageSize,
+            allCount: allList.length,
+            allPage: allPages,
+            pageNumber: currentPage
         }
         let resp = {
-          "data": list,
-          "page":{
-    				"totalRecord": lists.length,
-            "pageIndex": parseInt(reqBody.pageNum,10),
-            "pageNum": limit,
-            "allpage": allpage
-    			}
+          "records": list,
+          "pageInfo":pageInfo
         }
         return resdata('0000', 'success', resp);
     } catch (err) {

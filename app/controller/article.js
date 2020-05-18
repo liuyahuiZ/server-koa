@@ -90,8 +90,13 @@ exports.articleDetail = async (reqBody) => {
 exports.getArticleDetail = async (reqBody) => {
     // console.log(reqBody.id);
     try {
-        let list = await article.find({_id: reqBody.id});
-        return resdata('0000', 'success', list);
+        let list = await article.find({_id: reqBody._id});
+        if(list && list.length > 0) {
+            return resdata('0000', 'success', list[0]);
+        }else {
+            respon = resdata('0013', 'the article is not fond');
+        }
+        
     } catch (err) {
         return errdata(err);
     }

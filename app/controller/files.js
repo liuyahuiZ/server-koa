@@ -93,7 +93,7 @@ exports.fileUp = async (file, userid) => {
     mkdirs.mkdirsSync(targetInfo.targetPaths);
     let stream = fs.createWriteStream(targetInfo.resultPath);//创建一个可写流
     fs.createReadStream(tmpPath).pipe(stream);
-    let unlinkStatus = fs.unlinkSync(tmpPath);
+    // let unlinkStatus = fs.unlinkSync(tmpPath);
 
     let dataArr = {
         fileName: targetInfo.targetName,

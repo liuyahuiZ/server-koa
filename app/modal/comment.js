@@ -3,7 +3,8 @@ let Schema = mongoose.Schema;
 let CommentSchema = new Schema({
     user:String,
 	repayuser:String,
-	content: String,
+    content: String,
+    articleId: String,
 	createTime: {
         type: Date,
         dafault: Date.now()
@@ -43,11 +44,7 @@ class Comment{
     create(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            let user = new self.comment({
-                user: dataArr.user,
-                repayuser: dataArr.repayuser,
-                content: dataArr.content,
-            });
+            let user = new self.comment(dataArr);
             user.save(function(e, data) {
                 // if (e) response.send(e.message);
                 if(e){
@@ -61,14 +58,15 @@ class Comment{
     update(dataArr){
         const self = this;
         return new Promise(function (resolve, reject){
-            let arr = {
-                user: dataArr.user,
-                repayuser: dataArr.repayuser,
-                content: dataArr.content,
-            };
+            // let arr = {
+            //     user: dataArr.user,
+            //     articleId: dataArr.articleId,
+            //     repayuser: dataArr.repayuser,
+            //     content: dataArr.content,
+            // };
             self.comment.update({
                 _id: dataArr.id,
-              }, arr,function(e, data, numberAffected) {
+              }, dataArr,function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
                 if(e){
                     reject(e);

@@ -73,6 +73,10 @@ exports.articleDetail = async (reqBody) => {
     // console.log(reqBody.id);
     try {
         let list = await article.find({_id: reqBody.id});
+        // console.log('list>>>', list)
+        console.log('reqBody.id', reqBody.id)
+        let commentlist = await comment.find({articleId: reqBody.id});
+        console.log('comment>>>',  commentlist)
         let newSea = 1;
         if(list[0].sea){
             newSea=list[0].sea+1
@@ -80,8 +84,9 @@ exports.articleDetail = async (reqBody) => {
         let upData = {
             sea: newSea
         }
+        
         let upResult = await article.update({_id: reqBody.id}, upData);
-        return resdata('0000', 'success', list);
+        return resdata('0000', 'success', {article: list[0], comment: commentlist});
     } catch (err) {
         return errdata(err);
     }
@@ -149,6 +154,44 @@ exports.updateArticle = async (reqBody) => {
     } catch (err) {
         console.log(err)
         throw new Error(err);
+        return errdata(err);
+    }
+}
+
+exports.findCommit = async (reqBody) => {
+    try {
+        let dataArr = {
+            articleId: reqBody.id,
+        };
+        // let skip = {sort:{"createTime":-1}};
+        let crea = await comment.find(dataArr);
+        let pageInfo = {
+            pages: 1,
+            total: crea.length,
+            currentPage: 1,
+            pageSize: 100,
+            allCount: crea.length,
+            allPage: 1,
+            pageNumber: 1
+        }
+        return resdata('0000', 'success', {records: crea, pageInfo: pageInfo})
+    } catch (err) {
+        return errdata(err);
+    }
+}
+
+exports.makeCommit = async (reqBody) => {
+    console.log('reqBody', reqBody)
+    try {
+        let dataArr = {
+            user: reqBody.user,
+            repayuser: reqBody.repayuser,
+            content: reqBody.content,
+            articleId: reqBody.articleId,
+        };
+        let crea = await comment.create(dataArr);
+        return resdata('0000', 'success', crea);
+    } catch (err) {
         return errdata(err);
     }
 }

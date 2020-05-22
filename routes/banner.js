@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import { findType, findTheType,  addType, removeType, typeList, updateType } from '../app/controller/banner'
+import { findType, findTheType,  addType, removeType, typeList, bannerList, updateType } from '../app/controller/banner'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a article response!';
@@ -8,6 +8,11 @@ router.get('/', function (ctx, next) {
 router.post('/bannerList', async (ctx, next) => {
   let reqBody = ctx.request.body;
   ctx.body = await typeList(reqBody);
+});
+
+router.post('/bannerListForCode', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  ctx.body = await bannerList(reqBody);
 });
 
 router.post('/findBanner', async (ctx, next) => {

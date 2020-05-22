@@ -7,37 +7,37 @@ router.get('/', function (ctx, next) {
 
 router.post('/doCreate', async (ctx, next) => {
   let reqBody = ctx.request.body;
-  ctx.body = await docreate(reqBody);
+  ctx.body = await docreate(reqBody.data);
 });
 
 router.post('/recordList', async (ctx, next) => {
     let reqBody = ctx.request.body;
     console.log(reqBody);
-    ctx.body = await getRecordList(reqBody);
+    ctx.body = await getRecordList(reqBody.data);
 });
 
 router.post('/recordListForTime', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
-  ctx.body = await getRecordListForTime(reqBody);
+  ctx.body = await getRecordListForTime(reqBody.data);
 });
 
 router.post('/recordListForType', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
-  ctx.body = await getRecordListForType(reqBody);
+  ctx.body = await getRecordListForType(reqBody.data);
 });
 
 router.post('/recordList', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
-  ctx.body = await getRecordList(reqBody);
+  ctx.body = await getRecordList(reqBody.data);
 });
 
 router.post('/removeRecord', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
-  ctx.body = await removeRecord(reqBody);
+  ctx.body = await removeRecord(reqBody.data);
 });
 
 module.exports = router;

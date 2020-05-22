@@ -68,6 +68,39 @@ exports.typeList = async (reqBody) => {
     }
 }
 
+exports.bannerList = async (reqBody) => {
+    try{
+        let data = reqBody.data;
+        console.log('reqBody', reqBody)
+        let pageSize = data.pageSize || 10;
+		let pageNumber = data.pageNumber || 1;
+        let sec = {
+            code: data.code,
+        }
+        for(let it in sec){
+            if(!(sec[it]&&sec[it]!=='')) {
+                delete sec[it]
+            }
+        }
+        sec = Object.assign({}, sec);
+        console.log('sec:', sec)
+        const where = {skip: (pageNumber - 1) * pageSize, limit:pageSize}
+        let list = await banner.find(sec, where);
+		return resdata('0000', 'success', {
+			pageInfo: {
+				allPage: Math.ceil(list.length / pageSize),
+				pageNumber: pageNumber,
+				pageSize: pageSize
+            },
+            pages: Math.ceil(list.length / pageSize),
+			records: list
+		});
+    }catch(err){
+        console.log(err);
+        return errdata(err);
+    }
+}
+
 exports.addType = async (reqBody) => {
     let data = reqBody.data || {};
     try {

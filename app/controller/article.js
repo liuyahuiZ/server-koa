@@ -9,15 +9,19 @@ const logUtil = require('../../utils/logUtil');
 exports.articleList = async (reqBody) => {
     let dataArr = reqBody.searchObg || {
     }
+    let sort = {"createTime":-1};
     if(reqBody.keyWord) {
         dataArr['title']=new RegExp(reqBody.keyWord);//模糊查询参数
         dataArr['content']=new RegExp(reqBody.keyWord);
+    }
+    if(reqBody.sort){
+        sort = reqBody.sort
     }
     let currentPage = parseInt(reqBody.current) || 1;
     let pageSize = parseInt(reqBody.pageSize)||10;
     let startNum =  (currentPage-1) * pageSize;
     
-    let skip = {skip:startNum,limit:pageSize,sort:{"createTime":-1}};
+    let skip = {skip:startNum,limit:pageSize,sort: sort};
     try {
         let allList = await article.find(dataArr);
         let allPages = allList.length/pageSize;

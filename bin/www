@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('demo:server');
 var http = require('http');
 let config = require('../config/serverConfig');
+var sokiet = require('../service/sokiet');
 
 /**
  * Get port from environment and store in Express.
@@ -30,6 +31,8 @@ server.listen(config.port || 3000);
 server.on('error', onError);
 server.on('listening', onListening);
 
+var io = require('socket.io')(server);
+io.on('connection', sokiet.onConnect);
 
 /**
  * Normalize a port into a number, string, or false.

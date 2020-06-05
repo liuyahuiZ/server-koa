@@ -14,7 +14,7 @@ exports.messagesList = async (reqBody) => {
         let sec = {}
         const AllCount = await messages.count(sec);
 		console.log('count:', AllCount);
-        const where = {skip: (pageNumber - 1) * pageSize, limit:pageSize}
+        const where = {skip: (pageNumber - 1) * pageSize, limit:pageSize, sort:{"createTime":-1}}
         let list = await messages.find(sec, where);
 		return resdata('0000', 'success', {
 			pageInfo: {

@@ -27,7 +27,9 @@ var server = http.createServer(app.callback());
  * Listen on provided port, on all network interfaces.
  */
 var io = require('socket.io')(server);
-io.on('connection', sokiet.onConnect);
+io.of('/nodeApi').on('connection', function(socket){
+  sokiet.onConnect(socket, io)
+});
 
 server.listen(config.port || 3000);
 server.on('error', onError);

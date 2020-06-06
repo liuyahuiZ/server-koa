@@ -1,11 +1,11 @@
 // 
-exports.onConnect=function (socket) {
+exports.onConnect=function (socket, io) {
 	//在线用户
 	var onlineUsers = {};
 	//当前在线人数
 	var onlineCount = 0;
 	console.log('a user connected');
-
+	// console.log('socket', socket)
 	//监听新用户加入
 	socket.on('login', function(obj){
 		//将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到

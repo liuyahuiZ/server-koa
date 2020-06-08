@@ -11,7 +11,7 @@ export default () => {
             console.log('respon');
             ms = new Date() - start;
             //记录响应日志
-            logUtil.logResponse(ctx, ms);
+            // logUtil.logResponse(ctx, ms);
 
         } catch (error) {
             console.log('error');

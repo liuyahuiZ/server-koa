@@ -1,6 +1,6 @@
 import {babyUser} from '../modal/babyUser'
 import {resdata, errdata} from '../../utils/serve'
-
+const CryptoJS = require('crypto');
 const logUtil = require('../../utils/logUtil');
 
 exports.getUserList = async (ctx, next) => {
@@ -25,8 +25,16 @@ exports.userLogin = async (reqBody) => {
     try {
         let list = await babyUser.find({username: reqBody.username});
         let respon = {}
+
         if(list && list.length > 0) {
-            respon = resdata('0000', 'update success', list);
+           let password =  CryptoJS.createHash('md5').update(reqBody.loginPassword,'utf8').digest('hex');
+           console.log('password', password, list[0].password)
+           if(password===list[0].password){
+            respon = resdata('0000', 'login success', list);
+           } else{
+            respon = resdata('9999', 'password Error');
+           }
+            
         }else {
             respon = resdata('9999', 'the user is not exicet');
         }
@@ -78,8 +86,10 @@ exports.register = async (reqBody) => {
         height: reqBody.height,
         weight: reqBody.weight,
         remark: reqBody.remark,
+        role: reqBody.role,
         sex: reqBody.sex,
         phone: reqBody.phone,
+        password: CryptoJS.createHash('md5').update(reqBody.password,'utf8').digest('hex'),
         imgUrl: reqBody.imgUrl
     }
     try {
@@ -107,6 +117,7 @@ exports.updateUser = async (reqBody) => {
         height: reqBody.height,
         weight: reqBody.weight,
         remark: reqBody.remark,
+        role: reqBody.role,
         sex: reqBody.sex,
         phone: reqBody.phone,
         imgUrl: reqBody.imgUrl
@@ -115,6 +126,10 @@ exports.updateUser = async (reqBody) => {
         let list = await babyUser.find({_id: reqBody.id});
         let respon = {};
         if(list && list.length > 0) {
+            if(list[0].password!==reqBody.password){
+                dataArr.password = CryptoJS.createHash('md5').update(reqBody.password,'utf8').digest('hex')
+            }
+            console.log('dataArr', dataArr)
             let newUser = await babyUser.update({_id: reqBody.id}, dataArr);
             console.log(newUser);
             respon = resdata('0000', 'update success', newUser);

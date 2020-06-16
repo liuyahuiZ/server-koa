@@ -9,6 +9,7 @@ let PagesSchema = new Schema({
     templateId: String,
     configId: String,
     channelId: String,
+    isDIYPage: String,
     createUserId: String,
     updateUserId:  String,
     status:{

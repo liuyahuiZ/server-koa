@@ -1,5 +1,6 @@
 import {project} from '../modal/project'
 import {pages} from '../modal/pages'
+import {role} from '../modal/role'
 import {resdata, errdata} from '../../utils/serve'
 
 const logUtil = require('../../utils/logUtil');
@@ -36,19 +37,78 @@ exports.projectList = async (reqBody) => {
     }
 }
 
+function checkData(item, checkData){
+    let status = false;
+    let pages = []
+    for(let i=0;i<checkData.length;i++){
+        if(checkData[i].projectId==item){
+            status = true;
+            pages = checkData[i].pageId.split(',')
+            break;
+        }
+    }
+    return {status: status, pages: pages};
+}
+
+function checkChildren(pageArr, menu){
+    let newArr = []
+    for(let i=0;i<menu.length;i++){
+        console.log('menu[i]', menu[i]._id.toString())
+        if(pageArr.includes(menu[i]._id.toString())){
+            newArr.push(menu[i])
+        }
+    }
+    return newArr;
+}
+
 exports.projectMenu = async (reqBody, next) => {
     try {
         let list = await project.find({}, {});
-        console.log(list);
+        let where = {
+            roleCode: reqBody.role
+        }
+        let roles = await role.find(where);
+        console.log('roles', roles[0].menuGroup);
         let newList = []
         for(let i=0; i<list.length; i++){
-          let dataArr = {
-            projectId: list[i]._id,
-          }
-            let pagesList = await pages.find(dataArr, {});
-          console.log('pagesList', pagesList);
+            let result = checkData(list[i]._id, roles[0].menuGroup)
+            console.log('result', result)
+            if(result.status){
+            let dataArr = {
+                projectId: list[i]._id,
+            }
+          let pagesList = await pages.find(dataArr, {});
+          pagesList = checkChildren(result.pages, pagesList)
+        //   console.log('pagesList', pagesList);
         //   newList[i] = list[i];
-          newList.push({ _id: list[i]._id, 
+            newList.push({ _id: list[i]._id, 
+            title: list[i].title,
+            describe: list[i].describe,
+            projectIcon: list[i].projectIcon,
+            info: list[i],
+            children: pagesList});
+            
+            }
+        }
+        return resdata('0000', 'success', newList);
+    } catch (err) {
+        console.log('err',err)
+        return errdata(err);
+    }
+}
+
+exports.allProject = async (reqBody, next) => {
+    try {
+        let list = await project.find({}, {});
+        let newList = []
+        for(let i=0; i<list.length; i++){
+            let dataArr = {
+                projectId: list[i]._id,
+            }
+          let pagesList = await pages.find(dataArr, {});
+        //   console.log('pagesList', pagesList);
+        //   newList[i] = list[i];
+            newList.push({ _id: list[i]._id, 
             title: list[i].title,
             describe: list[i].describe,
             projectIcon: list[i].projectIcon,

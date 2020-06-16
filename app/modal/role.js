@@ -1,13 +1,10 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-let StoresSchema = new Schema({
-    openId:String,
-	systerm:String,
-    appName: String,
-    appVersion:String,
-	clientType:Object,
-    availWidth: String,
-    availHeight: String,
+let RoleSchema = new Schema({
+    roleName: String,
+    roleCode: String,
+    menuGroup:Object,
+    remark: String,
 	createTime: {
         type: Date,
         dafault: Date.now()
@@ -18,7 +15,7 @@ let StoresSchema = new Schema({
     },
 })
 
-StoresSchema.pre('save', function(next) {
+RoleSchema.pre('save', function(next) {
     if (this.isNew) {
       this.createTime = this.updateTime = Date.now()
     }
@@ -27,16 +24,28 @@ StoresSchema.pre('save', function(next) {
     }
     next()
 })
-class StoresMonitoring{
+class Role{
     constructor() {
-          this.storesMonitoring = mongoose.model("storesMonitoring", StoresSchema);
+          this.role = mongoose.model("role", RoleSchema);
     }
     find(dataArr={}, skip={}) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.storesMonitoring.find(dataArr,null,skip, function(e, docs) {
+            self.role.find(dataArr,null,skip, function(e, docs) {
                 if(e){
                     console.log('e:',e);
+                    reject(e);
+                }else{
+                    resolve(docs);
+                }
+            })
+        })
+    }
+    count(dataArr={}, skip={}) {
+        const self = this;
+        return new Promise(function (resolve, reject){
+            self.role.where(dataArr,null,skip).count( function(e, docs) {
+                if(e){
                     reject(e);
                 }else{
                     resolve(docs);
@@ -47,16 +56,8 @@ class StoresMonitoring{
     create(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            let user = new self.storesMonitoring({
-                openId: dataArr.openId,
-                systerm: dataArr.systerm,
-                appName:  dataArr.appName,
-                appVersion:  dataArr.appVersion,
-                clientType: dataArr.clientType,
-                availWidth: dataArr.availWidth,
-                availHeight: dataArr.availHeight,
-            });
-            user.save(function(e, data) {
+            let user = new self.role(dataArr);
+            user.save(function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
                 if(e){
                     reject(e);
@@ -66,21 +67,10 @@ class StoresMonitoring{
             });
         })
     }
-    update(dataArr){
+    update(option={}, dataArr={}){
         const self = this;
         return new Promise(function (resolve, reject){
-            let arr = {
-                openId: dataArr.openId,
-                systerm: dataArr.systerm,
-                appName:  dataArr.appName,
-                appVersion:  dataArr.appVersion,
-                clientType: dataArr.clientType,
-                availWidth: dataArr.availWidth,
-                availHeight: dataArr.availHeight,
-            };
-            self.storesMonitoring.update({
-                _id: dataArr.id,
-              }, arr,function(e, data, numberAffected) {
+            self.role.update(option, dataArr,function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
                 if(e){
                     reject(e);
@@ -93,7 +83,7 @@ class StoresMonitoring{
     delete(dataArr) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.storesMonitoring.remove({
+            self.role.remove({
                 _id: dataArr.id
             }, function(e, data) {
                 if(e){
@@ -106,5 +96,5 @@ class StoresMonitoring{
     }
 }
 
-let storesMonitoring = new StoresMonitoring()
-export {storesMonitoring}
+let role = new Role()
+export {role}

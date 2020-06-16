@@ -12,6 +12,7 @@ let UserSchema = new Schema({
     personfile:Object,
     imgUrl: Object,
     email:String,
+    userRole: String,
     type:Object,
 	typecode:String,
     remark:String,
@@ -74,10 +75,23 @@ class User{
                 phone: dataArr.phone,
                 emial: dataArr.emial,
                 remark: dataArr.remark,
-                imgUrl: dataArr.imgUrl
+                imgUrl: dataArr.imgUrl,
+                userRole: dataArr.role
             });
             user.save(function(e, data, numberAffected) {
                 // if (e) response.send(e.message);
+                if(e){
+                    reject(e);
+                }else{
+                    resolve(data);
+                }
+            });
+        })
+    }
+    update(option={}, dataArr={}){
+        const self = this;
+        return new Promise(function (resolve, reject){
+            self.users.update(option, dataArr,function(e, data) {
                 if(e){
                     reject(e);
                 }else{

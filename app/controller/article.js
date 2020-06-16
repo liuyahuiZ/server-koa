@@ -2,9 +2,9 @@ import {article} from '../modal/article'
 import {comment} from '../modal/comment'
 import {blockType} from '../modal/blockType'
 import {resdata, errdata} from '../../utils/serve'
+import { commitEmit } from '../../service/commitEmit';
 
 const logUtil = require('../../utils/logUtil');
-
 
 exports.articleList = async (reqBody) => {
     let dataArr = reqBody.searchObg || {
@@ -194,6 +194,9 @@ exports.makeCommit = async (reqBody) => {
             articleId: reqBody.articleId,
         };
         let crea = await comment.create(dataArr);
+        // var emitter = new events.EventEmitter();
+        // emitter.emit("commit_event", dataArr); 
+        commitEmit(dataArr);
         return resdata('0000', 'success', crea);
     } catch (err) {
         return errdata(err);

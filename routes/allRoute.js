@@ -1,6 +1,7 @@
 const router = require('koa-router')();
 const index = require('./index');
 const users = require('./users');
+const role = require('./role');
 const files = require('./files');
 const collect = require('./collect');
 const wx = require('./wx');
@@ -26,6 +27,7 @@ const pagesConfig = require('./pagesConfig');
 router.use('/', index.routes(), index.allowedMethods());
 // router.use('/ssr', ssr.routes(), ssr.allowedMethods());
 router.use('/users', users.routes(), users.allowedMethods());
+router.use('/role', role.routes(), role.allowedMethods());
 router.use('/files', files.routes(), files.allowedMethods());
 router.use('/collect', collect.routes(), collect.allowedMethods());
 router.use('/wx', wx.routes(), wx.allowedMethods());

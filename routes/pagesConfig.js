@@ -7,30 +7,30 @@ router.get('/', function (ctx, next) {
 
 router.post('/pageConfig_qry', async (ctx, next) => {
   let reqBody = ctx.request.body;
-  console.log('reqBody', reqBody);
+  // console.log('reqBody', reqBody);
   ctx.body = await pageConfigList(reqBody.data);
 });
 
 router.post('/pageConfig_get', async (ctx, next) => {
   let reqBody = ctx.request.body;
-  console.log('reqBody', reqBody);
+  // console.log('reqBody', reqBody);
   ctx.body = await pageConfigDetail(reqBody.data, next);
 });
 
 router.post('/pageConfig_add', async (ctx, next) => {
   let reqBody = ctx.request.body;
-  console.log(reqBody);
+  // console.log(reqBody);
   ctx.body = await createPageConfig(reqBody.data);
 });
 
 router.post('/pageConfig_modify', async (ctx, next) => {
   let reqBody = ctx.request.body;
-  console.log(reqBody);
+  // console.log(reqBody);
   ctx.body = await updatePageConfig(reqBody.data);
 });
 
 router.post('/pageConfig_delete', async (ctx, next) => {
-  console.log(ctx.request.body);
+  // console.log(ctx.request.body);
   let reqBody = ctx.request.body;
   ctx.body = await removePageConfig(reqBody.data);
 });

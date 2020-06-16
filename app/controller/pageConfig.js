@@ -64,7 +64,7 @@ exports.createPageConfig = async (reqBody) => {
         let newUser = await pageConfig.create(dataArr);
         // console.log('newUser', newUser);
         let respon = resdata('0000', 'success', newUser);
-        console.log(respon);
+        // console.log(respon);
         return respon;
     } catch (err) {
         console.log('err', err)

@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import { projectList, projectMenu, projectDetail, createProject, updateProject, mkCommit, removeProject} from '../app/controller/project'
+import { projectList, projectMenu, projectDetail, allProject, createProject, updateProject, mkCommit, removeProject} from '../app/controller/project'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a article response!';
@@ -9,6 +9,12 @@ router.post('/project_menu', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log('reqBody', reqBody);
   ctx.body = await projectMenu(reqBody.data, next);
+});
+
+router.post('/project_all', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log('reqBody', reqBody);
+  ctx.body = await allProject(reqBody.data, next);
 });
 
 router.post('/project_qry', async (ctx, next) => {

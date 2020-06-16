@@ -51,7 +51,6 @@ class Project{
                     reject(e);
                 }else{
                     const result = docs
-                    console.log('docs', docs)
                     resolve(result);
                 }
             })
@@ -74,7 +73,6 @@ class Project{
         const self = this;
         return new Promise(function (resolve, reject){
             self.project.find(dataArr,null,skip, function(err, list) {
-                console.log('list')
                 if(err){
                     console.log('e:',err);
                     reject(err);

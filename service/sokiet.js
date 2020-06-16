@@ -1,10 +1,14 @@
-// 
+var events = require("events");
+import { commitHerdEmit } from './commitEmit';
 exports.onConnect=function (socket, io) {
 	//在线用户
 	var onlineUsers = {};
 	//当前在线人数
 	var onlineCount = 0;
+	var candysUser = {};
 	console.log('a user connected');
+	// 监听事件some_event
+
 	// console.log('socket', socket)
 	//监听新用户加入
 	socket.on('login', function(obj){
@@ -47,4 +51,14 @@ exports.onConnect=function (socket, io) {
 		io.emit('message', obj);
 		console.log(obj.username+'说：'+obj.content);
 	});
+
+	socket.on('candysLogin', function(obj){
+		console.log('candysUser', obj, candysUser)
+		if(!candysUser.hasOwnProperty(obj.userid)){
+			console.log('no this id', obj.userid);
+			candysUser[obj.userid] = obj.username;
+			commitHerdEmit(io);
+		}
+	})
+	
 };

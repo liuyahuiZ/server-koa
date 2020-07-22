@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import { projectList, projectMenu, projectDetail, allProject, createProject, updateProject, mkCommit, removeProject} from '../app/controller/project'
+import { projectList, projectMenu, projectDetail, allProject, createProject, updateProject, mkCommit, removeProject, downLoadAllProject, downLoadProject, importProject, importPageConfig} from '../app/controller/project'
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a article response!';
@@ -41,6 +41,30 @@ router.post('/project_modify', async (ctx, next) => {
   ctx.body = await updateProject(reqBody.data);
 });
 
+router.post('/downLoadProject', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log(reqBody);
+  ctx.set('Content-Type', 'application/octet-stream')
+  ctx.body = await downLoadAllProject(reqBody.data);
+})
+router.post('/downLoadPageConfig', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log(reqBody);
+  ctx.set('Content-Type', 'application/octet-stream')
+  ctx.body = await downLoadProject(reqBody.data);
+})
+
+router.post('/importProject', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log(reqBody);
+  ctx.body = await importProject(reqBody.data);
+})
+
+router.post('/importPages', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log(reqBody);
+  ctx.body = await importPageConfig(reqBody.data);
+})
 
 router.post('/mkCommit', async (ctx, next) => {
   let reqBody = ctx.request.body;

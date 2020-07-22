@@ -1,9 +1,10 @@
+const config = require('../../config/serverConfig');
+const fs = require('fs');
 import {project} from '../modal/project'
 import {pages} from '../modal/pages'
 import {role} from '../modal/role'
+import {pageConfig} from '../modal/pageConfig'
 import {resdata, errdata} from '../../utils/serve'
-
-const logUtil = require('../../utils/logUtil');
 
 exports.projectList = async (reqBody) => {
     let dataArr = {
@@ -99,13 +100,19 @@ exports.projectMenu = async (reqBody, next) => {
 
 exports.allProject = async (reqBody, next) => {
     try {
-        let list = await project.find({}, {});
+        let reqData = {}
+        if(reqBody&&reqBody._id){
+            reqData = {
+                _id: reqBody._id
+            }
+        }
+        let list = await project.find(reqData, {});
         let newList = []
         for(let i=0; i<list.length; i++){
             let dataArr = {
                 projectId: list[i]._id,
             }
-          let pagesList = await pages.find(dataArr, {});
+            let pagesList = await pages.find(dataArr, {});
         //   console.log('pagesList', pagesList);
         //   newList[i] = list[i];
             newList.push({ _id: list[i]._id, 
@@ -121,6 +128,257 @@ exports.allProject = async (reqBody, next) => {
         return errdata(err);
     }
 }
+
+exports.downLoadAllProject = async (reqBody, next) => {
+    try {
+        let reqData = {}
+        if(reqBody&&reqBody._id){
+            reqData = {
+                _id: reqBody._id
+            }
+        }
+        console.log('reqData', reqData)
+        let list = await project.find(reqData, {});
+        let newList = []
+        for(let i=0; i<list.length; i++){
+            let dataArr = {
+                projectId: list[i]._id,
+            }
+            let pagesList = await pages.find(dataArr, {});
+            let newPages = []
+            for(let j=0; j<pagesList.length; j++){
+                console.log('configId', pagesList[j].configId)
+                let configJson = {}
+                if(pagesList[j].configId){
+                    configJson = await pageConfig.findOne({_id: pagesList[j].configId});
+                } 
+                newPages.push({
+                    _id: pagesList[j]._id, 
+                    configJson: configJson,
+                    configId: pagesList[j].configId,
+                    createTime: pagesList[j].createTime,
+                    describe: pagesList[j].describe,
+                    feature: pagesList[j].feature,
+                    pageIcon: pagesList[j].pageIcon,
+                    projectId: pagesList[j].projectId,
+                    status: pagesList[j].status,
+                    templateId: pagesList[j].templateId,
+                    title: pagesList[j].title,
+                    updateTime: pagesList[j].updateTime,
+                    url: pagesList[j].url,
+                    weight: pagesList[j].weight
+                })
+            }
+        //   console.log('pagesList', pagesList);
+        //   newList[i] = list[i];
+            newList.push({ _id: list[i]._id, 
+            title: list[i].title,
+            describe: list[i].describe,
+            projectIcon: list[i].projectIcon,
+            info: list[i],
+            children: newPages});
+        }
+        let writeResult = fs.writeFileSync(config.root+ '/uploads/allproject.json', JSON.stringify(newList));
+        console.log('writeResult>>>>>>', writeResult);
+        return fs.readFileSync(config.root+ '/uploads/allproject.json');
+
+        // return resdata('0000', 'success', newList);
+    } catch (err) {
+        console.log('err',err)
+        return errdata(err);
+    }
+}
+
+function checkInArr(arr, key, value){
+    console.log('arr',arr,key,value)
+    let status = false;
+    for(let i=0;i<arr.length;i++){
+        console.log(arr[i][key], value, arr[i][key]== value)
+        if(arr[i][key]== value) {
+            status = true
+        }
+    }
+    return status
+}
+
+exports.downLoadProject = async (reqBody, next) => {
+    try {
+        let reqData = {}
+        if(reqBody&&reqBody._id){
+            reqData = {
+                _id: reqBody._id
+            }
+        }else{
+            return errdata('9999', 'error, id is null', 'error, id is null');
+        }
+        let list = await project.findOne(reqData, {});
+        let dataArr = {
+            projectId: list._id,
+        }
+        let pagesList = await pages.find(dataArr, {});
+        console.log('pagesList')
+        let newPages = []
+        for(let j=0; j<pagesList.length; j++){
+            let status = checkInArr(reqBody.pages, 'value', pagesList[j]._id.toString())
+            if(status==false) continue;
+
+            console.log('configId', pagesList[j].configId)
+            let configJson = {}
+            if(pagesList[j].configId){
+                configJson = await pageConfig.findOne({_id: pagesList[j].configId});
+            } 
+            newPages.push({
+                _id: pagesList[j]._id, 
+                configJson: configJson,
+                configId: pagesList[j].configId,
+                createTime: pagesList[j].createTime,
+                describe: pagesList[j].describe,
+                feature: pagesList[j].feature,
+                pageIcon: pagesList[j].pageIcon,
+                projectId: pagesList[j].projectId,
+                status: pagesList[j].status,
+                templateId: pagesList[j].templateId,
+                title: pagesList[j].title,
+                updateTime: pagesList[j].updateTime,
+                url: pagesList[j].url,
+                weight: pagesList[j].weight
+            })
+        }
+        let newObg = { _id: list._id, 
+            title: list.title,
+            describe: list.describe,
+            projectIcon: list.projectIcon,
+            info: list,
+            children: newPages
+        }
+        
+        let writeResult = fs.writeFileSync(config.root+ '/uploads/pages.json', JSON.stringify(newObg));
+        console.log('writeResult>>>>>>', writeResult);
+        return fs.readFileSync(config.root+ '/uploads/pages.json');
+
+        // return resdata('0000', 'success', newList);
+    } catch (err) {
+        console.log('err',err)
+        return errdata(err);
+    }
+}
+async function createPages(allPages, project){
+    if(allPages&&allPages.length>0) { 
+        try{
+            for(let i=0;i<allPages.length;i++){
+                let dataArr = {
+                    title: allPages[i].title,
+                    describe: allPages[i].describe,
+                    url: allPages[i].url,
+                    projectId: project._id,
+                    templateId: allPages[i].templateId,
+                    isDIYPage: allPages[i].isDIYPage,
+                    pageIcon: allPages[i].pageIcon,
+                    weight: allPages[i].weight,
+                    status: allPages[i].status,
+                    feature: allPages[i].feature
+                }
+                let newUser = await pages.create(dataArr);
+                console.log('newUser', newUser._id.toString());
+                let config = allPages[i].configJson;
+                let configData = {
+                    pageId: newUser._id.toString(),
+                    configJson: config.configJson,
+                    status: 0,
+                    configVersion: config.configVersion,
+                }
+                let newConfig = await pageConfig.create(configData);
+                console.log('newConfig', newConfig._id.toString());
+            }
+        } catch(err){
+            console.log('err', err);
+        }
+    }
+}
+
+async function updatePages(allPages, project){
+    if(allPages&&allPages.length>0) { 
+        try{
+            for(let i=0;i<allPages.length;i++){
+                let dataArr = {
+                    title: allPages[i].title,
+                    describe: allPages[i].describe,
+                    url: allPages[i].url,
+                    projectId: project._id,
+                    templateId: allPages[i].templateId,
+                    isDIYPage: allPages[i].isDIYPage,
+                    pageIcon: allPages[i].pageIcon,
+                    weight: allPages[i].weight,
+                    status: allPages[i].status,
+                    feature: allPages[i].feature
+                }
+                
+                let newUser = {};
+                let oldPages = await pages.findOne({title: allPages[i].title, projectId: project._id});
+                if(oldPages&&oldPages._id){
+                    // newUser = await pages.update({_id: pages._id}, dataArr);
+                    console.log('oldUser', oldPages, oldPages._id.toString());
+                    newUser = oldPages
+                } else{
+                    newUser = await pages.create(dataArr);
+                    console.log('newUser', newUser._id.toString());
+                }
+                
+                let config = allPages[i].configJson;
+                let configData = {
+                    pageId: newUser._id.toString(),
+                    configJson: config.configJson,
+                    status: 0,
+                    configVersion: config.configVersion,
+                }
+                console.log('configData', configData);
+                let newConfig = await pageConfig.create(configData);
+                console.log('newConfig', newConfig._id.toString());
+            }
+        } catch(err){
+            console.log('err', err);
+        }
+    }
+}
+exports.importProject = async (reqBody) => {
+    // console.log(reqBody.id);
+    try {
+        let configJson = fs.readFileSync(config.root + reqBody.fileLink);
+        // console.log('configJson', configJson.toString());
+        let projects = configJson.toString();
+        if(!projects){
+            return errdata( 'err', '9999', '没有找到对应配置文件',);
+        }
+        projects = JSON.parse(projects);
+        let result = '';
+        for(let i=0;i<projects.length;i++){
+           result =  await createPages(projects[i].children, reqBody.pageInfo)
+        }
+        return resdata('0000', 'success', result);
+    } catch (err) {
+        console.log(err)
+        return errdata(err);
+    }
+}
+
+exports.importPageConfig = async (reqBody) => {
+    // console.log(reqBody.id);
+    try {
+        let configJson = fs.readFileSync(config.root + reqBody.fileLink);
+        // console.log('configJson', configJson.toString());
+        let projects = configJson.toString();
+        if(!projects){
+            return errdata( 'err', '9999', '没有找到对应配置文件',);
+        }
+        projects = JSON.parse(projects);
+        let result = await updatePages(projects.children, reqBody.pageInfo)
+        return resdata('0000', 'success', result);
+    } catch (err) {
+        console.log(err)
+        return errdata(err);
+    }
+}
+
 
 exports.projectDetail = async (reqBody) => {
     // console.log(reqBody.id);

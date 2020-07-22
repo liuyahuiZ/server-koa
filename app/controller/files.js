@@ -6,6 +6,7 @@ const config = require('../../config/serverConfig');
 import {files} from '../modal/files';
 import {collect} from '../modal/collect';
 import mkdirs from '../../utils/mkdir';
+import {project} from '../modal/project'
 import {resdata, errdata} from '../../utils/serve'
 
 exports.createQrcode = async (Text) => {
@@ -41,6 +42,24 @@ exports.getImage =  async (imagePath) => {
         return errdata(null,'9999', err);
     }
 }
+exports.downFile = async (path) => {
+    console.log('path', path)
+    try {
+        // 读取本地文件并返回文件流
+	    // let targetPath = config.root+ '/uploads/test.json';
+        // // let filePath = path.join(targetPath, '');
+        // console.log(targetPath);
+        // return fs.readFileSync(targetPath);
+
+        // 读取数据库，返回文件流
+        let allList = await project.find({});
+        let writeResult = fs.writeFileSync(config.root+ '/uploads/project.json', JSON.stringify(allList));
+        console.log('writeResult>>>>>>', writeResult);
+        return fs.readFileSync(config.root+ '/uploads/project.json');
+    } catch (err) {
+        return errdata(null,'9999', err);
+    }
+}
 exports.fileDetail =  async (id) => {
     try {
         let list = await files.find({_id: id});
@@ -54,7 +73,7 @@ exports.fileDetail =  async (id) => {
         return errdata(err);
     }
 }
-function getFileInfo(type) {
+function getFileInfo(type, fileName) {
     let uploadPath = config.root+ '/uploads/';
     let extensionName = "";
     //判断文件类型
@@ -74,6 +93,9 @@ function getFileInfo(type) {
         case 'application/zip':extensionName='zip';
         break;
     }
+    if(extensionName==''){
+        extensionName = fileName.split('.')[1]
+    }
     let theData = new Date();
     let timeName = (Date.parse(new Date())/1000) + '' + (Math.round(Math.random()*9999));
     let targetPaths = theData.getFullYear() + '-' + ( theData.getMonth()+1) + '-' + theData.getDate();
@@ -88,7 +110,7 @@ exports.fileUp = async (file, userid) => {
     let tmpPath = file.path;
     let type = file.type;
 
-    let targetInfo = getFileInfo(type);
+    let targetInfo = getFileInfo(type, file.name);
     // console.log(targetInfo);
     mkdirs.mkdirsSync(targetInfo.targetPaths);
     let stream = fs.createWriteStream(targetInfo.resultPath);//创建一个可写流

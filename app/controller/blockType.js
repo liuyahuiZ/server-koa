@@ -117,9 +117,10 @@ exports.updateType = async (reqBody) => {
 }
 
 exports.removeType = async (reqBody) => {
-    if(!reqBody.id) return resdata('9999', 'id is required', {});
+    let data = reqBody.data || {};
+    if(!data.id) return resdata('9999', 'id is required', {});
     try {
-        let list = await blockType.delete({id: reqBody.id});
+        let list = await blockType.delete({id: data.id});
         return resdata('0000', 'success', list);
     } catch (err) {
         return errdata(err);

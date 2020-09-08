@@ -8,6 +8,7 @@ import {resdata, errdata} from '../../utils/serve'
 
 exports.projectList = async (reqBody) => {
     let dataArr = {
+        isDelete: {"$ne" : 1}
     }
     let currentPage = parseInt(reqBody.current) || 1;
     let pageSize = parseInt(reqBody.size)||10;
@@ -400,6 +401,7 @@ exports.createProject = async (reqBody) => {
         projectIcon: reqBody.projectIcon,
         weight: reqBody.weight,
         feature: reqBody.feature,
+        isDelete: 0
     }
     try {
         let newUser = await project.create(dataArr);
@@ -423,6 +425,7 @@ exports.updateProject = async (reqBody) => {
         projectIcon: reqBody.projectIcon,
         weight: reqBody.weight,
         feature: reqBody.feature,
+        isDelete: 0
     }
     try {
         let list = await project.find({_id: reqBody.id});

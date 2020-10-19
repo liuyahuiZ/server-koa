@@ -39,10 +39,10 @@ class BabyUser{
     constructor() {
           this.babyUser = mongoose.model("babyUser", UserSchema);
     }
-    find(dataArr={}) {
+    find(dataArr={}, skip={}, limit=null) {
         const self = this;
         return new Promise(function (resolve, reject){
-            self.babyUser.find(dataArr, function(e, docs) {
+            self.babyUser.find(dataArr,limit,skip, function(e, docs) {
                 if(e){
                     console.log('e:',e);
                     reject(e);

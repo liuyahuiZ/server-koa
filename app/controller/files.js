@@ -60,6 +60,155 @@ exports.downFile = async (path) => {
         return errdata(null,'9999', err);
     }
 }
+
+function resetStr(arr){
+    if(arr[1]){
+        arr[1] = arr[1].replace(/\t+/g,'')
+        arr[1] = arr[1].split(/\n/);
+    }
+    if(arr.length==1){
+        return arr[0]
+    }
+    return arr
+}
+
+function replaceStr(arr){
+    if(arr[1]){
+        arr[1] = arr[1].replace(/\t+/g,'')
+        arr[1] = arr[1].replace(/\n/g,'')
+        // arr[1] = arr[1].replace(/\"/,'')
+    }
+    if(arr.length==1){
+        return arr[0]
+    }
+    return arr
+}
+
+function checkInArr(arr, str){
+    let status=false;
+    let key = '';
+    let type = ''
+    for(let i=0;i<arr.length;i++){
+        if(str.includes(arr[i].text)){
+            status =  true;
+            key = arr[i].key
+            if(arr[i].type){
+                type = arr[i].type
+            }
+            break;
+        }
+    }
+    return {status, key, type: type};
+}
+
+function resetTable(arr, labelArr){
+    let resultArr = []
+    for(let i=2; i<arr.length;i++){
+        arr[i] = arr[i].replace(/\s/g,'');
+        let itemArr = arr[i].split('|');
+        itemArr.pop()
+        itemArr.shift()
+        let items = {}
+        for(let j=0;j<labelArr.length;j++){
+            items[labelArr[j].key] = itemArr[j];
+        }
+        resultArr.push(items)
+    }
+    return resultArr;
+}
+
+function setArrToYapiJson(arr){
+    let resObg = {
+        type: 'object',
+        title: 'empty object',
+        properties: {},
+        required: []
+    }
+    let requiredArr = []
+    for(let i=0; i < arr.length; i++){
+        resObg.properties[arr[i].name] = {
+            type: arr[i].type,
+            chinaName: arr[i].description,
+            description: arr[i].demo,
+            maxLength: arr[i].maxLength,
+        }
+        if(arr[i].require=='是'){
+            requiredArr.push(arr[i].name)
+        }
+    }
+    resObg.required = requiredArr;
+    return resObg;
+}
+
+exports.importFile = async (path) => {
+    console.log('path', path)
+    try {
+        let Obg = {}
+        // 读取本地文件并返回文件流
+	    let targetPath = config.root+ '/uploads/test.md';
+        // let filePath = path.join(targetPath, '');
+        // console.log(targetPath);
+        let fileStr = fs.readFileSync(targetPath, 'utf8').toString();
+        let project = fileStr.match(/#.*?#/);
+        let title = fileStr.match(/##.*?##/);
+        project[0] = project[0].replace(/(#|\*|\s)/g,'');
+        title[0] = title[0].replace(/(#|\*|\s)/g,'');
+
+        Obg.project = project[0];
+        Obg.title = title[0];
+
+        fileStr = fileStr.replace(project[0],'');
+        fileStr = fileStr.replace(title[0],'');
+
+        let result = fileStr.split(/######/);
+        let configKey = [{text: '接口功能描述', key: 'remark'}, {text: '支持格式', key: 'req_body_type'}, 
+        {text: 'HTTP请求方式', key: 'method'}, { text: '编码格式', key: 'codeType'}, {text: 'URL', key: 'path'},
+        {text: '版本', key: 'version'}];
+        let keyWords = [{ text: '请求示例', key: 'req_markdown'}, {text:'响应示例', key: 'res_markdown'}, {text: '异常示例', key: 'res_desc'}];
+        let tableKey= [{text: '请求地址', key: 'environmental', type: 'envKey'}, {text: '公共请求参数', key: 'com_req_body', type: 'paramesKey'},{text: '请求参数', key: 'req_body_other', type: 'paramesKey'},
+        {text: '公共响应参数', key: 'com_res_body', type: 'paramesKey'},{text: '响应参数', key: 'res_body', type: 'paramesKey'},{text: '公共响应码', key: 'com_code', type: 'codeKey'},{text: '业务响应码', key: 'code_querys', type: 'codeKey'}]
+        
+
+        let tableType = {
+            envKey: [{ text: '环境', key: 'envName'},{ text: '访问地址', key: 'host'},{ text: '完整地址', key: 'path'}],
+            paramesKey : [{ text: '参数', key: 'name'},{ text: '类型', key: 'type'},{ text: '是否必填', key: 'require'},{ text: '最大长度', key: 'maxLength'},{ text: '描述', key: 'description'},{ text: '示例值', key: 'demo'}],
+            codeKey : [{ text: '错误码', key: 'codeName'},{ text: '返回内容', key: 'responContent'},{ text: '错误描述', key: 'remark'},{ text: '解决方案', key: 'soluton'}]
+        }
+
+        for(let i=0;i<result.length;i++){
+            let configStatus = checkInArr(configKey,result[i]);
+            let keyWordStatus = checkInArr(keyWords,result[i]);
+            let tableKeyStatus = checkInArr(tableKey,result[i]);
+            // 基础配置
+            if(configStatus.status){
+                result[i] = result[i].split(/\n+/)
+                result[i][1] = result[i][1].replace(/(>|\s)/g,'')
+                Obg[configStatus.key] = result[i][1]
+            }else if(tableKeyStatus.status){
+                result[i] = result[i].split(/\n\n/)
+                result[i] = resetStr(result[i]);
+                Obg[tableKeyStatus.key] = resetTable(result[i][1], tableType[tableKeyStatus.type]);
+
+                // Obg[tableKeyStatus.key] = result[i][1];
+            }else if(keyWordStatus.status){
+                // JSON文本
+                result[i] = result[i].split(/\n\n/)
+                result[i] = replaceStr(result[i])
+                Obg[keyWordStatus.key] = result[i][1]
+            }else{
+                result[i] = result[i].split(/\n\n/)
+                result[i] = resetStr(result[i])
+            } 
+        }
+        Obg.req_body_other = setArrToYapiJson(Obg.com_req_body.concat(Obg.req_body_other));
+        Obg.res_body = setArrToYapiJson(Obg.com_res_body.concat(Obg.res_body));
+        console.log('Obg', Obg)
+        return Obg;
+    } catch (err) {
+        return errdata(null,'9999', err);
+    }
+}
+
 exports.fileDetail =  async (id) => {
     try {
         let list = await files.find({_id: id});

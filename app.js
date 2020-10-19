@@ -11,7 +11,7 @@ const koaBody = require('koa-body');
 const logger = require('koa-logger');
 const cors = require('koa-cors');
 const loggers = require('./middleware/loggers');
-const test1 = require('./middleware/test1');
+const tokenCheck = require('./middleware/tokenCheck');
 const test2 = require('./middleware/test2');
 
 const router = require('./routes/allRoute');
@@ -28,7 +28,7 @@ app.use(convert.compose(
 app.use(convert(require('koa-static')(__dirname + '/public')));
 // 本地log
 app.use(convert(loggers()));
-// app.use(convert(test1()));
+app.use(convert(tokenCheck()));
 // app.use(convert(test2()));
 // app.use(views(__dirname + '/views', {extension: 'jade'}));
 

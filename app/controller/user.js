@@ -1,7 +1,33 @@
 import {babyUser} from '../modal/babyUser'
 import {resdata, errdata} from '../../utils/serve'
+import { dxcry, excry } from '../../utils/excry';
+
 const CryptoJS = require('crypto');
 const logUtil = require('../../utils/logUtil');
+
+async function getToken(userInfo) {
+    return new Promise(function (resolve, reject) {
+        try {
+            let token = {
+                num: parseInt(Math.random() * Math.pow(10, 15)),
+                time: (new Date()).getTime(),
+                userId: userInfo._id,
+                limitTime: 3600*1000*2,
+            }
+            dxcry(token).then((res)=>{
+                console.log('token', res);
+                resolve(res);
+            }).catch((err)=>{
+                console.log('err', err)
+                reject(err) ;
+            });
+            // resolve(encodeToken);
+        } catch (err) {
+            console.log('err', err)
+            reject(err) ;
+        }
+    })
+}
 
 exports.getUserList = async (ctx, next) => {
     try {
@@ -30,7 +56,19 @@ exports.userLogin = async (reqBody) => {
            let password =  CryptoJS.createHash('md5').update(reqBody.loginPassword,'utf8').digest('hex');
            console.log('password', password, list[0].password)
            if(password===list[0].password){
-            respon = resdata('0000', 'login success', list);
+            
+            let userInfo = {
+                _id: list[0]._id,
+                username: list[0].username,
+                role: list[0].role,
+                imgUrl: list[0].imgUrl,
+                remark:list[0].remark,
+                sex: list[0].sex
+            }
+            let token = await getToken(userInfo)
+            console.log('token', token)
+            userInfo.token = token
+            respon = resdata('0000', 'login success', userInfo);
            } else{
             respon = resdata('9999', 'password Error');
            }

@@ -10,3 +10,14 @@ exports.filer=function (obj) {
 	}
 	return newObj;
 };
+
+exports.checkIndexOf = function(str,arr){
+	let status = false;
+	for(let i=0;i<arr.length;i++){
+		if(str==arr[i]||str.includes(arr[i])){
+			status=true;
+			break;
+		}
+	}
+	return status
+}

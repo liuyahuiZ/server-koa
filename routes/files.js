@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-import {createQrcode, fileUp, fileList, removeFile, readFile, fileDetail, getImage, downFile} from '../app/controller/files'
+import {createQrcode, fileUp, fileList, removeFile, readFile, fileDetail, getImage, downFile, importFile} from '../app/controller/files'
 
 router.get('/', async (ctx, next) => {
     console.log(ctx);
@@ -40,6 +40,12 @@ router.get('/downFile', async (ctx, next) => {
     let reqBody = ctx.query;
     ctx.set('Content-Type', 'application/octet-stream')
     ctx.body = await downFile(reqBody.text);
+    // ctx.res.writeHead(200, {'Content-Type': 'image/png'});
+})
+router.get('/importFile', async (ctx, next) => {
+    console.log(ctx.query.text);
+    let reqBody = ctx.query;
+    ctx.body = await importFile(reqBody.text);
     // ctx.res.writeHead(200, {'Content-Type': 'image/png'});
 })
 router.post('/ImageDetail', async (ctx, next) => {

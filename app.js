@@ -28,7 +28,8 @@ app.use(convert.compose(
 app.use(convert(require('koa-static')(__dirname + '/public')));
 // 本地log
 app.use(convert(loggers()));
-app.use(convert(tokenCheck()));
+// 校验token
+// app.use(convert(tokenCheck()));
 // app.use(convert(test2()));
 // app.use(views(__dirname + '/views', {extension: 'jade'}));
 

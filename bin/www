@@ -31,7 +31,7 @@ server.listen(config.port || 3000);
 server.on('error', onError);
 server.on('listening', onListening);
 
-var io = require('socket.io')(server);
+var io = require('socket.io').listen(server);
 // io.listen(3002);
 // io.of('/nodeApi');
 io.on('connection', function(socket){

@@ -22,6 +22,7 @@ const pages = require('./pages');
 const accessLog = require('./accessLog');
 const messages = require('./messages');
 const pagesConfig = require('./pagesConfig');
+const busType = require('./busType');
 const card = require('./card');
 // const ssr = require('./ssr'); //引入的顺序会报bug
 
@@ -50,5 +51,6 @@ router.use('/project', project.routes(), project.allowedMethods());
 router.use('/page', pages.routes(), pages.allowedMethods());
 router.use('/pageConfig', pagesConfig.routes(), pagesConfig.allowedMethods());
 router.use('/card', card.routes(), card.allowedMethods());
+router.use('/busType', busType.routes(), busType.allowedMethods());
 
 module.exports = router;

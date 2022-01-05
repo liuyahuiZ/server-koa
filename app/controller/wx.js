@@ -5,12 +5,15 @@ import request from 'request'
 import sha1 from 'sha1'
 import config from '../../config/menuConfig'
 
+const WXBizMsgCrypt = require('wechat-crypto');
 const logUtil = require('../../utils/logUtil');
 // const APPID = 'wx15145e4f7b434571';
 // const APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
 const APPID = 'wx8d1aa61a0f6c8326';
 const APPSECRET = 'ad051f7763860fdfd7ff80f2a84b3bbc'
+const TOKEN = 'wetalks'
+const EncodingAESKey = 'wUrdVEvorJBsxFXIG5GIh5H1DWthnvllPAg5prw4JY1'
 
 async function getToken() {
     const self = this;
@@ -344,6 +347,17 @@ async function getHistoryToken(){
     console.log(newUser);
     return dataArr;
   }
+}
+
+exports.getEcho = async (reqBody) =>{
+  var msg_signature = reqBody.signature;
+  var timestamp = reqBody.timestamp;
+  var nonce = reqBody.nonce;
+  var echostr = reqBody.echostr;
+  var cryptor = new WXBizMsgCrypt(TOKEN, EncodingAESKey, APPID)
+  var s = cryptor.decrypt(echostr);
+  return echostr
+  // return(s.message);
 }
 exports.getAccessToken = async (ctx, next) => {
     try {

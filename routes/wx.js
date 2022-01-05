@@ -1,9 +1,14 @@
 const router = require('koa-router')();
-import {getAccessToken, sign, createMenu, senAllMessage, senTemplateMessage, sendTelMessage, getUserList, getWebAccessToken, sendCommonTplMessage} from '../app/controller/wx'
+import {getAccessToken, getEcho, sign, createMenu, senAllMessage, senTemplateMessage, sendTelMessage, getUserList, getWebAccessToken, sendCommonTplMessage} from '../app/controller/wx'
 import { getUpLoadToken } from '../app/controller/qiniu';
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a users response!';
+});
+router.get('/getEcho', async (ctx, next) => {
+  console.log(ctx.query.body);
+  let reqBody = ctx.request.body;
+  ctx.body = await getEcho(reqBody);
 });
 router.get('/getToken', async (ctx, next) => {
   ctx.body = await getAccessToken(ctx, next);

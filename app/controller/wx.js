@@ -354,8 +354,9 @@ exports.getEcho = async (reqBody) =>{
   var timestamp = reqBody.timestamp;
   var nonce = reqBody.nonce;
   var echostr = reqBody.echostr;
-  var cryptor = new WXBizMsgCrypt(TOKEN, EncodingAESKey, APPID)
-  var s = cryptor.decrypt(echostr);
+  console.log('getEcho reqBody', reqBody);
+  //var cryptor = new WXBizMsgCrypt(TOKEN, EncodingAESKey, APPID)
+  //var s = cryptor.decrypt(echostr);
   return echostr
   // return(s.message);
 }

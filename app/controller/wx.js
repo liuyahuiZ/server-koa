@@ -9,8 +9,8 @@ const logUtil = require('../../utils/logUtil');
 // const APPID = 'wx15145e4f7b434571';
 // const APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
-const APPID = 'wx9a7768b6cd7f33d0';
-const APPSECRET = '0076ac0595f2503920e88244654d7534'
+const APPID = 'wx8d1aa61a0f6c8326';
+const APPSECRET = 'ad051f7763860fdfd7ff80f2a84b3bbc'
 
 async function getToken() {
     const self = this;

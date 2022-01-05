@@ -6,8 +6,8 @@ router.get('/', function (ctx, next) {
   ctx.body = 'this a users response!';
 });
 router.get('/getEcho', async (ctx, next) => {
-  console.log(ctx.query.body);
-  let reqBody = ctx.request.body;
+  console.log(ctx.query);
+  let reqBody = ctx.query;
   ctx.body = await getEcho(reqBody);
 });
 router.get('/getToken', async (ctx, next) => {

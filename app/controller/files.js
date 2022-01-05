@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const logUtil = require('../../utils/logUtil');
 const config = require('../../config/serverConfig');
+const idcardGenerator = require('./picture');
 import {files} from '../modal/files';
 import {collect} from '../modal/collect';
 import mkdirs from '../../utils/mkdir';
@@ -339,6 +340,26 @@ exports.removeFile = async (reqBody) => {
             respon = resdata('0000', 'success', deletes);
         }else {
             respon = resdata('0000', 'the id is not exicet', list);
+        }
+        return respon;
+    } catch (err) {
+        throw new Error(err);
+        return errdata(err);
+    }
+}
+
+exports.createPersonPic = async (reqBody) => {
+    try {
+        reqBody.avatar = '/assest/images/avatar.png';
+        let fileStr = await idcardGenerator(reqBody);
+        let respon = {}
+        if(fileStr) {
+            let timeName = (Date.parse(new Date())/1000) + '' + (Math.round(Math.random()*9999));
+            const result = await fs.writeFileSync(`./uploads/${timeName}.png`, fileStr);
+            console.log('result===========', result)
+            respon = resdata('0000', 'success', timeName);
+        } else {
+            respon = resdata('0000', 'the fileStr is not exicet', fileStr);
         }
         return respon;
     } catch (err) {

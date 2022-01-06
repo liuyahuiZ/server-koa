@@ -40,7 +40,7 @@ router.get('/senTemplateMessage', async (ctx, next) => {
 
 router.post('/sendTelMessage', async (ctx, next) => {
   let reqBody = ctx.request.body;
-  ctx.body = await sendTelMessage(reqBody);
+  ctx.body = await sendTelMessage(reqBody.data);
 })
 
 router.get('/getUserList', async (ctx, next) => {
@@ -51,7 +51,7 @@ router.get('/getUserList', async (ctx, next) => {
 router.post('/getWebAccessToken', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
-  ctx.body = await getWebAccessToken(reqBody);
+  ctx.body = await getWebAccessToken(reqBody.data);
 })
 
 router.get('/getUpToken', async (ctx, next) => {
@@ -62,7 +62,7 @@ router.get('/getUpToken', async (ctx, next) => {
 
 router.post('/sendCommonTplMessage', async (ctx, next) => {
   let reqBody = ctx.request.body;
-  ctx.body = await sendCommonTplMessage(reqBody);
+  ctx.body = await sendCommonTplMessage(reqBody.data);
 })
 
 module.exports = router;

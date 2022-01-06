@@ -393,9 +393,10 @@ exports.getAccessToken = async (ctx, next) => {
 }
 
 exports.sign = async (reqBody) => {
+    let data = reqBody.data
     const noncestr='Wm3WZYTPz0wzccnW12';
-    const url = decodeURIComponent(reqBody.url);
-    console.log('url',  reqBody.url, decodeURIComponent(reqBody.url))
+    const url = decodeURIComponent(data.url);
+    console.log('url',  data.url, decodeURIComponent(data.url))
     const timestamp = Date.parse(new Date)/1000;
     try {
         const where = {skip:0,limit:5,sort:{"createTime":-1}}

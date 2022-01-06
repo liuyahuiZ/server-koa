@@ -405,6 +405,7 @@ exports.sign = async (reqBody) => {
         if(list&&list.length>0&& (Now - list[0].startTmp) /1000 < list[0].limit) {
            console.log('has');
            let data = {
+             appId: APPID,
              noncestr:noncestr,
              timestamp: timestamp,
              url: url,
@@ -428,6 +429,7 @@ exports.sign = async (reqBody) => {
 
           let newUser = await token.create(dataArr);
           let data = {
+            appId: APPID,
             noncestr:noncestr,
             timestamp: timestamp,
             url: url,

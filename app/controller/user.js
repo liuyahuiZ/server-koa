@@ -63,8 +63,8 @@ exports.userLogin = async (reqBody) => {
                 role: list[0].role,
                 imgUrl: list[0].imgUrl,
                 remark:list[0].remark,
+                typecode: list[0].typecode,
                 sex: list[0].sex,
-                typecode: list[0].typecode
             }
             let token = await getToken(userInfo)
             console.log('token', token)

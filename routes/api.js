@@ -16,6 +16,8 @@ const pageQuery = require('../cgiMock/pageQuery');
 const pageConfig = require('../cgiMock/pageConfig');
 const details = require('../cgiMock/details');
 const table = require('../cgiMock/table');
+const assessmentQuery = require('../cgiMock/assessmentQuery');
+const assessmentSubmit = require('../cgiMock/assessmentSubmit');
 
 router.get('/', async function (ctx, next) {
   ctx.state = {
@@ -126,5 +128,18 @@ router.post('/pte/table', async (ctx, next) => {
   console.log(reqBody);
   ctx.body = table;
 });
+
+router.get('/fund/fund-account/level/assessment/query', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log(reqBody);
+  ctx.body = assessmentQuery;
+});
+
+router.post('/fund/fund-account/level/assessment/submit', async (ctx, next) => {
+  let reqBody = ctx.request.body;
+  console.log(reqBody);
+  ctx.body = assessmentSubmit;
+});
+
 
 module.exports = router;

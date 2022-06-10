@@ -5,12 +5,15 @@ import request from 'request'
 import sha1 from 'sha1'
 import config from '../../config/menuConfig'
 
+const WXBizMsgCrypt = require('wechat-crypto');
 const logUtil = require('../../utils/logUtil');
 // const APPID = 'wx15145e4f7b434571';
 // const APPSECRET = '677cf9c6a8a69bb145a37cc7bce25210'
 
-const APPID = 'wx9a7768b6cd7f33d0';
-const APPSECRET = '0076ac0595f2503920e88244654d7534'
+const APPID = 'wx8d1aa61a0f6c8326';
+const APPSECRET = 'ad051f7763860fdfd7ff80f2a84b3bbc'
+const TOKEN = 'wetalks'
+const EncodingAESKey = 'wUrdVEvorJBsxFXIG5GIh5H1DWthnvllPAg5prw4JY1'
 
 async function getToken() {
     const self = this;
@@ -345,6 +348,18 @@ async function getHistoryToken(){
     return dataArr;
   }
 }
+
+exports.getEcho = async (reqBody) =>{
+  var msg_signature = reqBody.signature;
+  var timestamp = reqBody.timestamp;
+  var nonce = reqBody.nonce;
+  var echostr = reqBody.echostr;
+  console.log('getEcho reqBody', reqBody);
+  //var cryptor = new WXBizMsgCrypt(TOKEN, EncodingAESKey, APPID)
+  //var s = cryptor.decrypt(echostr);
+  return echostr
+  // return(s.message);
+}
 exports.getAccessToken = async (ctx, next) => {
     try {
         const where = {skip:0,limit:5,sort:{"createTime":-1}}
@@ -378,9 +393,10 @@ exports.getAccessToken = async (ctx, next) => {
 }
 
 exports.sign = async (reqBody) => {
+    let data = reqBody.data
     const noncestr='Wm3WZYTPz0wzccnW12';
-    const url = decodeURIComponent(reqBody.url);
-    console.log('url',  reqBody.url, decodeURIComponent(reqBody.url))
+    const url = decodeURIComponent(data.url);
+    console.log('url',  data.url, decodeURIComponent(data.url))
     const timestamp = Date.parse(new Date)/1000;
     try {
         const where = {skip:0,limit:5,sort:{"createTime":-1}}
@@ -390,6 +406,7 @@ exports.sign = async (reqBody) => {
         if(list&&list.length>0&& (Now - list[0].startTmp) /1000 < list[0].limit) {
            console.log('has');
            let data = {
+             appId: APPID,
              noncestr:noncestr,
              timestamp: timestamp,
              url: url,
@@ -413,6 +430,7 @@ exports.sign = async (reqBody) => {
 
           let newUser = await token.create(dataArr);
           let data = {
+            appId: APPID,
             noncestr:noncestr,
             timestamp: timestamp,
             url: url,

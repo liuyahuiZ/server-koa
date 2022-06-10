@@ -1,9 +1,14 @@
 const router = require('koa-router')();
-import {getAccessToken, sign, createMenu, senAllMessage, senTemplateMessage, sendTelMessage, getUserList, getWebAccessToken, sendCommonTplMessage} from '../app/controller/wx'
+import {getAccessToken, getEcho, sign, createMenu, senAllMessage, senTemplateMessage, sendTelMessage, getUserList, getWebAccessToken, sendCommonTplMessage} from '../app/controller/wx'
 import { getUpLoadToken } from '../app/controller/qiniu';
 
 router.get('/', function (ctx, next) {
   ctx.body = 'this a users response!';
+});
+router.get('/getEcho', async (ctx, next) => {
+  console.log(ctx.query);
+  let reqBody = ctx.query;
+  ctx.body = await getEcho(reqBody);
 });
 router.get('/getToken', async (ctx, next) => {
   ctx.body = await getAccessToken(ctx, next);
@@ -35,7 +40,7 @@ router.get('/senTemplateMessage', async (ctx, next) => {
 
 router.post('/sendTelMessage', async (ctx, next) => {
   let reqBody = ctx.request.body;
-  ctx.body = await sendTelMessage(reqBody);
+  ctx.body = await sendTelMessage(reqBody.data);
 })
 
 router.get('/getUserList', async (ctx, next) => {
@@ -46,7 +51,7 @@ router.get('/getUserList', async (ctx, next) => {
 router.post('/getWebAccessToken', async (ctx, next) => {
   let reqBody = ctx.request.body;
   console.log(reqBody);
-  ctx.body = await getWebAccessToken(reqBody);
+  ctx.body = await getWebAccessToken(reqBody.data);
 })
 
 router.get('/getUpToken', async (ctx, next) => {
@@ -57,7 +62,7 @@ router.get('/getUpToken', async (ctx, next) => {
 
 router.post('/sendCommonTplMessage', async (ctx, next) => {
   let reqBody = ctx.request.body;
-  ctx.body = await sendCommonTplMessage(reqBody);
+  ctx.body = await sendCommonTplMessage(reqBody.data);
 })
 
 module.exports = router;

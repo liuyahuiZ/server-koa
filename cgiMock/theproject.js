@@ -1,5 +1,5 @@
 module.exports = {
-    code: '0000',
+    code: '9999',
     data:{
         projectName: 'D0保险',
         createTime: '2019-4-1',
@@ -18,5 +18,6 @@ module.exports = {
             name: '123',
             list: '678'
         }
-    }
+    },
+    msg: '信息错误'
 }
